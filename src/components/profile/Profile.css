@@ -1,0 +1,98 @@
+/* Profile.css */
+.profile-container {
+  background: linear-gradient(135deg, #22242a 70%, #23272f 100%);
+  border-radius: 14px;
+  padding: 32px 24px 28px 24px;
+  margin: 32px auto;
+  max-width: 500px;
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(44,203,255,0.10), 0 1.5px 6px rgba(44, 203, 255, 0.08);
+  transition: box-shadow 0.2s;
+}
+
+.profile-container h2 {
+  color: #4299e1;
+  margin-bottom: 18px;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #4299e1 30%, #38b2ac 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-container p {
+  color: #b2f5ea;
+  font-size: 1.1rem;
+  margin-top: 12px;
+}
+
+/* Custom styles for profile avatar and edit button */
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  background: linear-gradient(135deg, #38b2ac 60%, #4299e1 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-right: 1.5rem;
+  box-shadow: 0 2px 12px rgba(56,178,172,0.12);
+}
+
+.profile-edit-btn {
+  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.profile-edit-btn:hover {
+  background: linear-gradient(90deg, #4299e1 30%, #38b2ac 100%);
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(44,203,255,0.10), 0 2px 8px rgba(0,0,0,0.10);
+  padding: 36px 28px 28px 28px;
+  margin: 36px auto;
+  max-width: 700px;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+  justify-content: center;
+}
+
+.profile-stat {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 18px 24px;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(44,203,255,0.06);
+}
+
+.profile-stat h3 {
+  color: #38b2ac;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.profile-stat p {
+  color: #23272f;
+  font-size: 1.5rem;
+  font-weight: bold;
+}

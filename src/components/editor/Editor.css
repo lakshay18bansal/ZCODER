@@ -1,0 +1,87 @@
+/* Editor.css */
+.editor-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(44,203,255,0.10), 0 2px 8px rgba(0,0,0,0.10);
+  padding: 36px 28px 28px 28px;
+  margin: 36px auto;
+  max-width: 900px;
+  color: #fff;
+  position: relative;
+}
+
+.editor-container h2 {
+  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
+  color: #fff;
+  padding: 10px 0 10px 0;
+  border-radius: 8px;
+  font-size: 2rem;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(56,178,172,0.08);
+}
+
+.code-area {
+  background: #181a20;
+  border: 1.5px solid #38b2ac;
+  border-radius: 8px;
+  min-height: 180px;
+  margin: 18px 0 0 0;
+  padding: 18px 14px;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  font-size: 1.1rem;
+  color: #b2f5ea;
+  box-shadow: 0 1.5px 8px rgba(56,178,172,0.07);
+  transition: border 0.2s;
+}
+
+.code-area:focus {
+  border: 1.5px solid #4299e1;
+  outline: none;
+}
+
+.editor-container p {
+  color: #b2f5ea;
+  margin-bottom: 0;
+}
+
+/* Custom styles for code editor toolbar and output */
+.editor-toolbar {
+  background: linear-gradient(90deg, #23272f 70%, #38b2ac 100%);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 2px 8px rgba(44,203,255,0.08);
+}
+
+.editor-toolbar select,
+.editor-toolbar button {
+  background: #23272f;
+  color: #b2f5ea;
+  border: 1px solid #38b2ac;
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin-right: 8px;
+  font-size: 1rem;
+  transition: border 0.2s, background 0.2s;
+}
+
+.editor-toolbar button:hover {
+  background: #38b2ac;
+  color: #fff;
+}
+
+.editor-output {
+  background: #f8fafc;
+  color: #23272f;
+  border-radius: 0 0 10px 10px;
+  padding: 18px 14px;
+  margin-top: 0;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  font-size: 1.1rem;
+  min-height: 80px;
+  box-shadow: 0 1.5px 8px rgba(56,178,172,0.07);
+}
