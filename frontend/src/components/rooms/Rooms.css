@@ -1,0 +1,110 @@
+/* Rooms.css */
+.rooms-container {
+  background: linear-gradient(135deg, #181a20 70%, #23272f 100%);
+  border-radius: 14px;
+  padding: 32px 24px 28px 24px;
+  margin: 36px auto;
+  max-width: 1200px;
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(44,203,255,0.10), 0 1.5px 6px rgba(44, 203, 255, 0.08);
+  transition: box-shadow 0.2s;
+}
+
+.rooms-container h2 {
+  color: #38b2ac;
+  margin-bottom: 18px;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rooms-container p {
+  color: #b2f5ea;
+  font-size: 1.1rem;
+  margin-top: 12px;
+}
+
+/* Custom styles for room cards and create button */
+.room-card {
+  background: linear-gradient(135deg, #23272f 80%, #181a20 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(44,203,255,0.10), 0 2px 8px rgba(0,0,0,0.10);
+  border: 1px solid #2d3748;
+  padding: 28px 20px;
+  margin-bottom: 18px;
+  transition: box-shadow 0.2s, border 0.2s;
+  color: #b2f5ea;
+}
+
+.room-card:hover {
+  box-shadow: 0 12px 32px rgba(44,203,255,0.18);
+  border: 1px solid #38b2ac;
+}
+
+.create-room-btn {
+  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-room-btn:hover {
+  background: linear-gradient(90deg, #4299e1 30%, #38b2ac 100%);
+}
+
+.rooms-container {
+  margin: 36px auto;
+  max-width: 1200px;
+}
+
+.room-title {
+  color: #f8fafc;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.room-card h3,
+.room-card p,
+.room-card span,
+.room-card button {
+  color: #b2f5ea !important;
+}
+
+.room-card .room-topic {
+  color: #38b2ac !important;
+}
+
+.room-card .users-online {
+  color: #b2bfcf !important;
+}
+
+.room-card .icon {
+  color: #38b2ac !important;
+}
+
+.room-card .join-btn {
+  background: #38b2ac;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 0;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.room-card .join-btn:hover {
+  background: #4299e1;
+}
