@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
-const codeRoutes = require('./routes/code'); 
+const codeRoutes = require('./routes/code');
+const questionRoutes = require('./routes/questions');
 
 dotenv.config();
 
@@ -20,7 +21,9 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
+
 app.use('/api/auth', authRoutes);
 app.use('/api/code', codeRoutes);
+app.use('/api/questions', questionRoutes);
 
 app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));

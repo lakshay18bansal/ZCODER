@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import Dashboard from './components/dashboard/dashboard';
+import SubmitQuestion from './components/dashboard/SubmitQuestion';
 import Profile from './components/profile/Profile';
 import Rooms from './components/rooms/Rooms';
 import Editor from './components/editor/Editor';
@@ -17,18 +18,21 @@ function App() {
         <Link to="/rooms" className={location.pathname === '/rooms' ? 'active' : ''}>Rooms</Link>
         <Link to="/editor" className={location.pathname === '/editor' ? 'active' : ''}>Editor</Link>
         <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>Profile</Link>
+        <Link to="/submit-question" className={location.pathname === '/submit-question' ? 'active' : ''}>Submit Question</Link>
         <Link to="/login" className={location.pathname === '/login' ? 'active' : ''}>Login</Link>
-        <Link to="/signup" className={location.pathname === '/signup' ? 'active' : ''}>Signup</Link>      </nav>
+        <Link to="/signup" className={location.pathname === '/signup' ? 'active' : ''}>Signup</Link>
+      </nav>
       <main className="main-content">
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/rooms" element={<Rooms />} />
-        <Route path="/editor" element={<Editor />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/submit-question" element={<SubmitQuestion />} />
+          <Route path="/rooms" element={<Rooms />} />
+          <Route path="/editor" element={<Editor />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
       </main>
       <footer className="app-footer">
         <div className="footer-content">

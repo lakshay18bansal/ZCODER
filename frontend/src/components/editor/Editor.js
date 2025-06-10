@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { fetchQuestions } from '../../utils/questions';
 import { Play, Download, Copy, Sun, Moon, Code2, XCircle } from 'lucide-react';
 import './Editor.css';
 
@@ -23,8 +24,33 @@ const Editor = () => {
   const [output, setOutput] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [input, setInput] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [selectedQid, setSelectedQid] = useState('');
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
   const codeRef = useRef(null);
   const lineRef = useRef(null);
+  // Load questions and set from query param if present
+  useEffect(() => {
+    fetchQuestions().then(qs => {
+      setQuestions(qs);
+      const params = new URLSearchParams(window.location.search);
+      const qid = params.get('qid');
+      if (qid) {
+        setSelectedQid(qid);
+        const q = qs.find(q => q.id === qid);
+        setSelectedQuestion(q || null);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedQid && questions.length) {
+      const q = questions.find(q => q.id === selectedQid);
+      setSelectedQuestion(q || null);
+    }
+  }, [selectedQid, questions]);
+  // ...existing code...
+  // Add question selector
 
   // line numbers
   const getLineNumbers = () => {
@@ -107,6 +133,17 @@ const Editor = () => {
           <span className="font-size-label">{fontSize}px</span>
         </div>
         <div className="toolbar-group">
+          <select
+            className="editor-select"
+            value={selectedQid}
+            onChange={e => setSelectedQid(e.target.value)}
+            style={{ minWidth: 120 }}
+          >
+            <option value="">Choose Question</option>
+            {questions.map(q => (
+              <option key={q.id} value={q.id}>{q.id} - {q.question.slice(0, 30)}...</option>
+            ))}
+          </select>
           <button className="icon-btn" onClick={handleCopy} title="Copy Code">
             <Copy size={18} />
             {isCopied && <span className="copied-badge">Copied!</span>}
@@ -119,6 +156,15 @@ const Editor = () => {
           </button>
         </div>
       </div>
+
+      {selectedQuestion && (
+        <div style={{ background: '#23272f', color: '#b2f5ea', borderRadius: 8, padding: 12, margin: '12px 0' }}>
+          <div><strong>Question {selectedQuestion.id}:</strong> {selectedQuestion.question}</div>
+          <div style={{ fontSize: 13, marginTop: 4 }}>
+            <strong>Input:</strong> {selectedQuestion.input_format} | <strong>Output:</strong> {selectedQuestion.output_format}
+          </div>
+        </div>
+      )}
 
       <div className="editor-main">
         <div className="editor-code-area">

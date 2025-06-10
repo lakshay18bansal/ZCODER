@@ -1,0 +1,2 @@
+// Copy questions.json to public folder for frontend access
+// This is a build/deploy step, not code. Please copy c:/Users/bilas/Documents/ZCODER/questions.json to c:/Users/bilas/Documents/ZCODER/frontend/public/questions.json manually or via script if needed.

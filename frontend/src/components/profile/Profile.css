@@ -1,29 +1,23 @@
 /* Profile.css - Glassy, glowing, energetic, modern profile card */
+/* Profile Card - Modern, Official, No Footer Collision */
 .profile-glass {
-  background: rgba(24, 26, 32, 0.8);
-  border-radius: 24px;
-  box-shadow: 0 8px 40px rgba(44,203,255,0.18), 0 2px 8px rgba(0,0,0,0.18);
+  background: #f5f6fa;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(44,62,80,0.10), 0 2px 8px rgba(0,0,0,0.10);
   padding: 40px 32px 32px 32px;
-  margin: 48px auto;
+  margin: 48px auto 48px auto;
   max-width: 700px;
   width: 95%;
-  color: #fff;
+  color: #2d3a4a;
   position: relative;
-  border: 1.5px solid rgba(56, 178, 172, 0.25);
+  border: 1.5px solid #e0e4ea;
   overflow: visible;
   transition: box-shadow 0.3s, background 0.3s;
-  z-index: 1;
+  z-index: 2;
 }
+/* Remove glow for official look */
 .profile-glow {
-  position: absolute;
-  top: -6px; left: -6px; right: -6px; bottom: -6px;
-  border-radius: 28px;
-  z-index: -1;
-  background: radial-gradient(ellipse at 60% 0%, #38b2ac55 0%, #4299e155 100%);
-  filter: blur(18px);
-  opacity: 0.7;
-  pointer-events: none;
-  animation: glowmove 6s linear infinite alternate;
+  display: none;
 }
 @keyframes glowmove {
   0% { background-position: 60% 0%; }
@@ -39,16 +33,12 @@
 .profile-title {
   font-size: 2.1rem;
   font-weight: 700;
-  color: #38b2ac;
-  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2d3a4a;
   letter-spacing: 1px;
   margin: 0;
 }
 .profile-edit-btn {
-  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
+  background: #2d3a4a;
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -59,14 +49,14 @@
   gap: 10px;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 6px 15px rgba(56, 178, 172, 0.25);
+  box-shadow: 0 6px 15px #2d3a4a22;
   position: relative;
   overflow: hidden;
 }
 .profile-edit-btn:hover {
-  background: linear-gradient(90deg, #4299e1 30%, #38b2ac 100%);
+  background: #1a202c;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(56, 178, 172, 0.35);
+  box-shadow: 0 8px 20px #2d3a4a33;
 }
 .profile-main {
   display: flex;
@@ -90,16 +80,16 @@
 .profile-avatar {
   width: 90px;
   height: 90px;
-  background: linear-gradient(135deg, #38b2ac 60%, #4299e1 100%);
+  background: #e0e4ea;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #2d3a4a;
   font-size: 2.2rem;
   font-weight: bold;
   position: relative;
-  box-shadow: 0 6px 18px #38b2ac33;
+  box-shadow: 0 6px 18px #2d3a4a22;
   overflow: hidden;
 }
 .profile-initials {
@@ -123,31 +113,27 @@
 .profile-name {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #38b2ac;
+  color: #2d3a4a;
   margin: 0 0 4px 0;
-  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 .profile-email {
-  color: #b2f5ea;
+  color: #4a5568;
   font-size: 1.05rem;
   margin: 0 0 6px 0;
   opacity: 0.85;
 }
 .profile-bio {
-  color: #fff;
+  color: #2d3a4a;
   font-size: 1rem;
   line-height: 1.6;
   margin: 0;
   opacity: 0.9;
 }
 .profile-input {
-  background: rgba(56, 178, 172, 0.08);
-  border: 1.5px solid #38b2ac55;
+  background: #fff;
+  border: 1.5px solid #e0e4ea;
   border-radius: 8px;
-  color: #b2f5ea;
+  color: #2d3a4a;
   font-size: 1rem;
   padding: 10px 14px;
   margin-bottom: 8px;
@@ -155,23 +141,24 @@
   transition: border 0.2s, box-shadow 0.2s;
 }
 .profile-input:focus {
-  border-color: #4299e1;
-  box-shadow: 0 0 0 2px #38b2ac33;
+  border-color: #2d3a4a;
+  box-shadow: 0 0 0 2px #2d3a4a22;
 }
 .profile-stats-area {
   display: flex;
   gap: 24px;
   margin-bottom: 36px;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 .profile-stat {
   flex: 1;
-  background: rgba(35, 39, 47, 0.7);
+  background: #e0e4ea;
   border-radius: 14px;
   padding: 24px 0 18px 0;
   text-align: center;
-  border: 1.5px solid rgba(56, 178, 172, 0.18);
-  box-shadow: 0 2px 12px rgba(44,203,255,0.08);
+  border: 1.5px solid #d1d5db;
+  box-shadow: 0 2px 12px #2d3a4a08;
   display: flex;
   flex-direction: column;
   align-items: center;
