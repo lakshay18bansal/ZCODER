@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { Play, Download, Copy } from 'lucide-react';
+import axios from 'axios';
 
-const Editor = ({ code = '', setCode = () => {}, onRunCode = () => {}, output = '', language = 'javascript' }) => {
+const Editor = () => {
+  const [code, setCode] = useState('');
+  const [language, setLanguage] = useState('javascript');
   const [theme, setTheme] = useState('dark');
   const [fontSize, setFontSize] = useState(14);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
   const languages = [
     { value: 'javascript', label: 'JavaScript' },
@@ -33,10 +38,25 @@ const Editor = ({ code = '', setCode = () => {}, onRunCode = () => {}, output = 
     document.body.removeChild(element);
   };
 
+  const onRunCode = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/code/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language, code, input }),
+      });
+      const data = await response.json();
+      setOutput(data.output || data.error || 'No output');
+    } catch (error) {
+      setOutput('Error connecting to server');
+      console.error(error);
+    }
+  };
+
   return (
     <div className="editor-container">
       <div className="editor-toolbar">
-        <select value={language} onChange={() => {}}>
+        <select value={language} onChange={e => setLanguage(e.target.value)}>
           {languages.map(lang => (
             <option key={lang.value} value={lang.value}>{lang.label}</option>
           ))}
@@ -55,6 +75,7 @@ const Editor = ({ code = '', setCode = () => {}, onRunCode = () => {}, output = 
         <button onClick={handleDownloadCode} title="Download Code"><Download size={16} /></button>
         <button onClick={onRunCode} style={{ background: '#38b2ac', color: '#fff', borderRadius: 6, padding: '6px 16px', marginLeft: 8 }}><Play size={16} /> Run Code</button>
       </div>
+
       <div style={{ display: 'flex', marginTop: 18 }}>
         <div style={{ flex: 1, position: 'relative' }}>
           <textarea
@@ -66,10 +87,23 @@ const Editor = ({ code = '', setCode = () => {}, onRunCode = () => {}, output = 
             spellCheck={false}
           />
         </div>
+
         <div style={{ width: 320, marginLeft: 24 }}>
+          <div className="editor-output" style={{ marginBottom: 16 }}>
+            <div style={{ fontWeight: 600, marginBottom: 8 }}>Input (stdin)</div>
+            <textarea
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              style={{ width: '100%', minHeight: 80, fontSize: 14 }}
+              placeholder="Optional input (e.g., for scanf, cin, input())"
+            />
+          </div>
+
           <div className="editor-output">
             <div style={{ fontWeight: 600, marginBottom: 8 }}>Output</div>
-            <pre style={{ margin: 0, fontSize: 14 }}>{output || 'Click "Run Code" to see output...'}</pre>
+            <pre style={{ margin: 0, fontSize: 14, whiteSpace: 'pre-wrap' }}>
+              {output || 'Click "Run Code" to see output...'}
+            </pre>
           </div>
         </div>
       </div>
