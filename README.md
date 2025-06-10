@@ -1,3 +1,8 @@
+TO GET THE code editor working use:
+--> cp .env.example .env
+and then login to: https://www.jdoodle.com/compiler-api and get your JDOODLE_CLIENT_ID and JDOODLE_CLIENT_SECRET
+--> copy them to required fields in .env file and you can run it successfully!
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
