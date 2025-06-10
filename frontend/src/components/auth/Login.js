@@ -19,17 +19,31 @@ function Login() {
       setMessage(err.response?.data?.error || 'Invalid credentials.');
     }
   };
-
   return (
     <div className="auth-container">
       <h2>Log In</h2>
       <form onSubmit={handleLogin}>
-        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input 
+          type="text" 
+          placeholder="Username" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+          required 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          required 
+        />
         <button type="submit">Log In</button>
       </form>
-      {message && <p>{message}</p>}
-      {token && <p style={{ wordBreak: 'break-all' }}>Token: {token}</p>}
+      {message && <p className={message.includes('successful') ? 'auth-message-success' : 'auth-message-error'}>{message}</p>}
+      {token && <div className="token-display">Token: {token}</div>}
+      <div className="auth-links">
+        <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+      </div>
     </div>
   );
 }

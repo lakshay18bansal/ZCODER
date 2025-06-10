@@ -1,61 +1,165 @@
-.signup-container {
+.auth-container {
   display: flex;
   flex-direction: column;
-  max-width: 350px;
+  max-width: 400px;
+  width: 90%;
   margin: 80px auto;
-  padding: 32px;
-  background: #181a20;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(44, 203, 255, 0.1);
+  padding: 40px;
+  background: linear-gradient(145deg, #1c1e24, #181a20);
+  border-radius: 16px;
+  border: 1px solid rgba(56, 178, 172, 0.2);
+  box-shadow: 0 8px 32px rgba(44, 203, 255, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
   color: #b2f5ea;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.signup-container h2 {
+.auth-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(44, 203, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.auth-container h2 {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   color: #38b2ac;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
 }
 
-.signup-container form {
+.auth-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #38b2ac, #4299e1);
+  border-radius: 3px;
+}
+
+.auth-container form {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.signup-container input {
-  margin-bottom: 16px;
-  padding: 12px;
+.auth-container input {
+  margin-bottom: 20px;
+  padding: 14px 16px;
   background: #23272f;
   border: 1.5px solid #38b2ac;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #b2f5ea;
+  font-size: 15px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.auth-container input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+}
+
+.auth-container button {
+  padding: 14px;
+  background: linear-gradient(90deg, #38b2ac, #4299e1);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.5px;
+}
+
+.auth-container button:hover {
+  background: linear-gradient(90deg, #319795, #3182ce);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(56, 178, 172, 0.4);
+}
+
+.auth-container button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(56, 178, 172, 0.3);
+}
+
+.auth-container p {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(56, 178, 172, 0.1);
+}
+
+.auth-container a {
+  color: #63b3ed;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.auth-container a:hover {
+  color: #4299e1;
+  text-decoration: underline;
+}
+
+.auth-message-success {
+  color: #38b2ac !important;
+  background-color: rgba(56, 178, 172, 0.1) !important;
+}
+
+.auth-message-error {
+  color: #f56565 !important;
+  background-color: rgba(245, 101, 101, 0.1) !important;
+}
+
+.auth-links {
+  margin-top: 20px;
+  text-align: center;
   font-size: 14px;
 }
 
-.signup-container button {
-  padding: 12px;
-  background: #38b2ac;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
+.auth-container .form-group {
+  position: relative;
+  margin-bottom: 20px;
 }
 
-.signup-container button:hover {
-  background: #319795;
+.auth-container .form-group label {
+  position: absolute;
+  left: 16px;
+  top: 15px;
+  color: #b2f5ea;
+  pointer-events: none;
+  transition: 0.3s ease all;
 }
 
-.signup-container p {
-  text-align: center;
-  margin-top: 16px;
+.auth-container .form-group input:focus + label,
+.auth-container .form-group input:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 10px;
+  font-size: 12px;
+  background: #23272f;
+  padding: 0 6px;
 }
 
-.signup-container a {
-  color: #63b3ed;
-  text-decoration: none;
-}
-
-.signup-container a:hover {
-  text-decoration: underline;
+/* Responsive styles */
+@media (max-width: 768px) {
+  .auth-container {
+    max-width: 100%;
+    width: 85%;
+    padding: 30px 20px;
+    margin: 60px auto;
+  }
+  
+  .auth-container h2 {
+    font-size: 24px;
+  }
+  
+  .auth-container button {
+    padding: 12px;
+  }
 }

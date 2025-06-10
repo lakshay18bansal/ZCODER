@@ -2,12 +2,14 @@
 .rooms-container {
   background: linear-gradient(135deg, #181a20 70%, #23272f 100%);
   border-radius: 14px;
-  padding: 32px 24px 28px 24px;
+  padding: 40px;
   margin: 36px auto;
   max-width: 1200px;
+  width: calc(100% - 48px);
   color: #fff;
   box-shadow: 0 4px 24px rgba(44,203,255,0.10), 0 1.5px 6px rgba(44, 203, 255, 0.08);
   transition: box-shadow 0.2s;
+  border: 1px solid rgba(56, 178, 172, 0.2);
 }
 
 .rooms-container h2 {
@@ -31,17 +33,31 @@
 .room-card {
   background: linear-gradient(135deg, #23272f 80%, #181a20 100%);
   border-radius: 16px;
-  box-shadow: 0 8px 40px rgba(44,203,255,0.10), 0 2px 8px rgba(0,0,0,0.10);
-  border: 1px solid #2d3748;
-  padding: 28px 20px;
-  margin-bottom: 18px;
-  transition: box-shadow 0.2s, border 0.2s;
+  box-shadow: 0 8px 24px rgba(44,203,255,0.10), 0 4px 8px rgba(0,0,0,0.10);
+  border: 1px solid rgba(56, 178, 172, 0.2);
+  padding: 28px 24px;
+  margin-bottom: 24px;
+  transition: all 0.3s;
   color: #b2f5ea;
+  position: relative;
+  overflow: hidden;
+}
+
+.room-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #38b2ac, #4299e1);
+  transition: all 0.3s;
 }
 
 .room-card:hover {
   box-shadow: 0 12px 32px rgba(44,203,255,0.18);
   border: 1px solid #38b2ac;
+  transform: translateY(-5px);
 }
 
 .create-room-btn {
@@ -107,4 +123,50 @@
 
 .room-card .join-btn:hover {
   background: #4299e1;
+}
+
+/* Section title with border-bottom styling */
+.section-title {
+  color: #38b2ac;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  position: relative;
+  padding-bottom: 12px;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 70px;
+  height: 3px;
+  background: linear-gradient(90deg, #38b2ac, #4299e1);
+  border-radius: 3px;
+}
+
+.dashboard-section {
+  margin-bottom: 32px;
+  padding: 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(56, 178, 172, 0.2);
+  background: rgba(24, 26, 32, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-section:hover {
+  box-shadow: 0 8px 24px rgba(44, 203, 255, 0.1);
+}
+
+/* Room cards wrapper with border box */
+.room-cards-container {
+  background: rgba(24, 26, 32, 0.5);
+  border: 1px solid rgba(56, 178, 172, 0.2);
+  border-radius: 14px;
+  padding: 30px;
+  margin-top: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }

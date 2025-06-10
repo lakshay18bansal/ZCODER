@@ -18,8 +18,8 @@ function App() {
         <Link to="/editor" className={location.pathname === '/editor' ? 'active' : ''}>Editor</Link>
         <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>Profile</Link>
         <Link to="/login" className={location.pathname === '/login' ? 'active' : ''}>Login</Link>
-        <Link to="/signup" className={location.pathname === '/signup' ? 'active' : ''}>Signup</Link>
-      </nav>
+        <Link to="/signup" className={location.pathname === '/signup' ? 'active' : ''}>Signup</Link>      </nav>
+      <main className="main-content">
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -29,6 +29,18 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
+      </main>
+      <footer className="app-footer">
+        <div className="footer-content">
+          <div className="footer-logo">© ZCODER</div>
+          <div className="footer-links">
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

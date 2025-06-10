@@ -17,16 +17,30 @@ function Signup() {
       setMessage(err.response?.data?.error || 'Something went wrong.');
     }
   };
-
   return (
     <div className="auth-container">
       <h2>Sign Up</h2>
       <form onSubmit={handleSignup}>
-        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input 
+          type="text" 
+          placeholder="Username" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+          required 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          required 
+        />
         <button type="submit">Sign Up</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className={message.includes('successful') ? 'auth-message-success' : 'auth-message-error'}>{message}</p>}
+      <div className="auth-links">
+        <p>Already have an account? <a href="/login">Log In</a></p>
+      </div>
     </div>
   );
 }
