@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchQuestions } from '../../utils/questions';
-import { Play, Download, Copy, Sun, Moon, Code2, XCircle } from 'lucide-react';
+import { Play, Download, Copy, Sun, Moon, Code2, XCircle, Settings, CheckCircle, Code } from 'lucide-react';
 import './Editor.css';
 
 const LANGUAGES = [
@@ -17,16 +17,20 @@ const THEMES = [
 ];
 
 const Editor = () => {
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(`function twoSum(nums, target) {
+    // Write your solution here
+    
+}`);
   const [language, setLanguage] = useState('javascript');
   const [theme, setTheme] = useState('dark');
-  const [fontSize, setFontSize] = useState(16);
+  const [fontSize, setFontSize] = useState(14);
   const [output, setOutput] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [input, setInput] = useState('');
   const [questions, setQuestions] = useState([]);
   const [selectedQid, setSelectedQid] = useState('');
   const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [activeTab, setActiveTab] = useState('testcase');
   const codeRef = useRef(null);
   const lineRef = useRef(null);
   // Load questions and set from query param if present
@@ -42,13 +46,48 @@ const Editor = () => {
       }
     });
   }, []);
-
   useEffect(() => {
     if (selectedQid && questions.length) {
       const q = questions.find(q => q.id === selectedQid);
       setSelectedQuestion(q || null);
+      
+      // Set default code template based on selected question and language
+      if (q) {
+        const templates = {
+          javascript: `function solution() {
+    // Write your solution here for: ${q.question}
+    
+}`,
+          python: `def solution():
+    # Write your solution here for: ${q.question}
+    pass`,
+          java: `public class Solution {
+    public void solution() {
+        // Write your solution here for: ${q.question}
+        
     }
-  }, [selectedQid, questions]);
+}`,
+          cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your solution here for: ${q.question}
+    
+    return 0;
+}`,
+          c: `#include <stdio.h>
+
+int main() {
+    // Write your solution here for: ${q.question}
+    
+    return 0;
+}`
+        };
+        
+        setCode(templates[language] || templates.javascript);
+      }
+    }
+  }, [selectedQid, questions, language]);
   // ...existing code...
   // Add question selector
 
@@ -99,9 +138,47 @@ const Editor = () => {
       console.error(error);
     }
   };
-
   // clear output
   const onClearOutput = () => {
+    setOutput('');
+  };
+
+  // reset code to template
+  const onResetCode = () => {
+    if (selectedQuestion) {
+      const templates = {
+        javascript: `function solution() {
+    // Write your solution here for: ${selectedQuestion.question}
+    
+}`,
+        python: `def solution():
+    # Write your solution here for: ${selectedQuestion.question}
+    pass`,
+        java: `public class Solution {
+    public void solution() {
+        // Write your solution here for: ${selectedQuestion.question}
+        
+    }
+}`,
+        cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your solution here for: ${selectedQuestion.question}
+    
+    return 0;
+}`,
+        c: `#include <stdio.h>
+
+int main() {
+    // Write your solution here for: ${selectedQuestion.question}
+    
+    return 0;
+}`
+      };
+      
+      setCode(templates[language] || templates.javascript);
+    }
     setOutput('');
   };
 
@@ -111,110 +188,221 @@ const Editor = () => {
       return () => clearTimeout(t);
     }
   }, [isCopied]);
-
   return (
-    <div className={`editor-glass editor-theme-${theme}`}>
-      <div className="editor-glow" />
-      <div className="editor-toolbar">
-        <div className="toolbar-group">
-          <select className="editor-select" value={language} onChange={e => setLanguage(e.target.value)}>
+    <div className={`editor-container editor-theme-${theme}`}>
+      {/* Header with navigation and tools */}
+      <div className="editor-header">
+        <div className="problem-nav">
+          <button 
+            className="nav-button" 
+            onClick={() => window.history.back()}
+            title="Back to Dashboard"
+          >
+            ← Back
+          </button>
+          <select
+            className="question-select"
+            value={selectedQid}
+            onChange={e => setSelectedQid(e.target.value)}
+          >
+            <option value="">Choose Question</option>
+            {questions.map(q => (
+              <option key={q.id} value={q.id}>{q.id}. {q.question}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="editor-controls">
+          <select className="control-select" value={language} onChange={e => setLanguage(e.target.value)}>
             {LANGUAGES.map(l => (
               <option key={l.value} value={l.value}>{l.label}</option>
             ))}
           </select>
-          <select className="editor-select" value={theme} onChange={e => setTheme(e.target.value)}>
-            {THEMES.map(t => (
-              <option key={t.value} value={t.value}>{t.label}</option>
-            ))}
-          </select>
-        </div>
-        <div className="toolbar-group">
-          <input type="range" min={12} max={22} value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="font-slider" />
-          <span className="font-size-label">{fontSize}px</span>
-        </div>
-        <div className="toolbar-group">
-          <select
-            className="editor-select"
-            value={selectedQid}
-            onChange={e => setSelectedQid(e.target.value)}
-            style={{ minWidth: 120 }}
-          >
-            <option value="">Choose Question</option>
-            {questions.map(q => (
-              <option key={q.id} value={q.id}>{q.id} - {q.question.slice(0, 30)}...</option>
-            ))}
-          </select>
           <button className="icon-btn" onClick={handleCopy} title="Copy Code">
-            <Copy size={18} />
+            <Copy size={16} />
             {isCopied && <span className="copied-badge">Copied!</span>}
           </button>
-          <button className="icon-btn" onClick={handleDownload} title="Download Code">
-            <Download size={18} />
-          </button>
           <button className="icon-btn run-btn" onClick={onRunCode} title="Run Code">
-            <Play size={18} />
+            <Play size={16} />
+            Run
           </button>
         </div>
       </div>
 
-      {selectedQuestion && (
-        <div style={{ background: '#23272f', color: '#b2f5ea', borderRadius: 8, padding: 12, margin: '12px 0' }}>
-          <div><strong>Question {selectedQuestion.id}:</strong> {selectedQuestion.question}</div>
-          <div style={{ fontSize: 13, marginTop: 4 }}>
-            <strong>Input:</strong> {selectedQuestion.input_format} | <strong>Output:</strong> {selectedQuestion.output_format}
-          </div>
-        </div>
-      )}
-
-      <div className="editor-main">
-        <div className="editor-code-area">
-          <textarea
-            className="editor-lines"
-            ref={lineRef}
-            value={getLineNumbers()}
-            readOnly
-            style={{ fontSize: fontSize, color: theme === 'light' ? '#38b2ac' : '#63b3ed' }}
-          />
-          <textarea
-            className="editor-code"
-            ref={codeRef}
-            value={code}
-            onChange={e => setCode(e.target.value)}
-            onScroll={handleScroll}
-            style={{ fontSize: fontSize }}
-            spellCheck={false}
-            placeholder={"// Start your code journey here..."}
-          />
-        </div>
-
-        <div className="editor-output-area">
-          <div className="output-header">
-            <span className="output-title">Input (stdin)</span>
-          </div>
-          <textarea
-            className="editor-input"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder="Optional input (e.g., for scanf, cin, input())"
-            style={{ fontSize: 14, minHeight: 60 }}
-          />
-
-          <div className="output-header" style={{ marginTop: 16 }}>
-            <span className="output-title">Output</span>
-            <button className="icon-btn clear-btn" onClick={onClearOutput} title="Clear Output">
-              <XCircle size={16} />
-            </button>
-          </div>
-
-          <div className="output-content">
-            {output ? (
-              <pre className="output-bubble">{output}</pre>
-            ) : (
-              <div className="output-placeholder">
-                <Play size={20} />
-                <span>Run your code to see output!</span>
+      {/* Main split layout */}
+      <div className="editor-split">
+        {/* Problem Description Panel */}
+        <div className="problem-panel">
+          {selectedQuestion ? (
+            <div className="problem-content">
+              <div className="problem-header">
+                <h1 className="problem-title">
+                  {selectedQuestion.id}. {selectedQuestion.question}
+                </h1>
+                <div className="problem-meta">
+                  <span className={`difficulty-badge difficulty-${selectedQuestion.difficulty?.toLowerCase() || 'easy'}`}>
+                    {selectedQuestion.difficulty || 'Easy'}
+                  </span>
+                  {selectedQuestion.tags && selectedQuestion.tags.length > 0 && (
+                    <div className="problem-tags">
+                      {selectedQuestion.tags.slice(0, 3).map(tag => (
+                        <span key={tag} className="tag-badge">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
+
+              <div className="problem-description">
+                <div className="section">
+                  <h3>Problem Statement</h3>
+                  <p>{selectedQuestion.question}</p>
+                </div>
+
+                {selectedQuestion.input_format && (
+                  <div className="section">
+                    <h3>Input Format</h3>
+                    <p>{selectedQuestion.input_format}</p>
+                  </div>
+                )}
+
+                {selectedQuestion.output_format && (
+                  <div className="section">
+                    <h3>Output Format</h3>
+                    <p>{selectedQuestion.output_format}</p>
+                  </div>
+                )}
+
+                {selectedQuestion.sample_input && selectedQuestion.sample_output && (
+                  <div className="section">
+                    <h3>Example</h3>
+                    <div className="example">
+                      <div className="example-item">
+                        <strong>Input:</strong>
+                        <pre className="example-code">{selectedQuestion.sample_input}</pre>
+                      </div>
+                      <div className="example-item">
+                        <strong>Output:</strong>
+                        <pre className="example-code">{selectedQuestion.sample_output}</pre>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Tab navigation */}
+              <div className="problem-tabs">
+                <button 
+                  className={`tab ${activeTab === 'testcase' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('testcase')}
+                >
+                  Testcase
+                </button>
+                <button 
+                  className={`tab ${activeTab === 'result' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('result')}
+                >
+                  Result
+                </button>
+              </div>
+
+              <div className="tab-content">
+                {activeTab === 'testcase' && (
+                  <div className="testcase-panel">
+                    <div className="input-section">
+                      <label>Custom Input:</label>
+                      <textarea
+                        className="input-textarea"
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        placeholder="Enter your test input here..."
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'result' && (
+                  <div className="result-panel">
+                    {output ? (
+                      <pre className="output-result">{output}</pre>
+                    ) : (
+                      <div className="no-result">
+                        <Play size={24} />
+                        <span>Click "Run" to see results</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="no-problem">
+              <Code size={48} />
+              <h2>Select a Problem</h2>
+              <p>Choose a question from the dropdown above to start coding</p>
+            </div>
+          )}
+        </div>
+
+        {/* Code Editor Panel */}
+        <div className="code-panel">
+          <div className="code-editor">
+            <div className="editor-header-inline">
+              <span className="editor-title">Code</span>
+              <div className="editor-actions">
+                <select className="theme-select" value={theme} onChange={e => setTheme(e.target.value)}>
+                  {THEMES.map(t => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+                <input 
+                  type="range" 
+                  min={12} 
+                  max={20} 
+                  value={fontSize} 
+                  onChange={e => setFontSize(Number(e.target.value))} 
+                  className="font-slider" 
+                />
+                <span className="font-size">{fontSize}px</span>
+              </div>
+            </div>
+
+            <div className="code-area">
+              <div className="line-numbers">
+                <textarea
+                  ref={lineRef}
+                  value={getLineNumbers()}
+                  readOnly
+                  className="line-numbers-textarea"
+                  style={{ fontSize: fontSize }}
+                />
+              </div>
+              <textarea
+                ref={codeRef}
+                className="code-textarea"
+                value={code}
+                onChange={e => setCode(e.target.value)}
+                onScroll={handleScroll}
+                style={{ fontSize: fontSize }}
+                spellCheck={false}
+                placeholder="// Write your solution here..."
+              />
+            </div>
+          </div>
+
+          <div className="editor-footer">
+            <div className="footer-actions">
+              <button className="action-btn secondary" onClick={handleDownload}>
+                <Download size={16} />
+                Download
+              </button>              <button className="action-btn secondary" onClick={onResetCode}>
+                Reset
+              </button>
+              <button className="action-btn primary" onClick={onRunCode}>
+                <Play size={16} />
+                Run Code
+              </button>
+            </div>
           </div>
         </div>
       </div>

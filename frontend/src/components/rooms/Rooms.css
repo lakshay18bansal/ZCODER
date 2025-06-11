@@ -1,35 +1,42 @@
-/* Rooms.css */
+/* Professional Rooms Styling */
 .rooms-container {
-  background: linear-gradient(135deg, #181a20 70%, #23272f 100%);
-  border-radius: 14px;
-  padding: 40px;
-  margin: 36px auto;
-  max-width: 1200px;
-  width: calc(100% - 48px);
-  color: #fff;
-  box-shadow: 0 4px 24px rgba(44,203,255,0.10), 0 1.5px 6px rgba(44, 203, 255, 0.08);
-  transition: box-shadow 0.2s;
-  border: 1px solid rgba(56, 178, 172, 0.2);
+  background: rgba(26, 31, 46, 0.95);
+  color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(79, 84, 92, 0.32);
+  padding: 32px;
+  margin: 24px auto;
+  max-width: 700px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rooms-container:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 .rooms-container h2 {
-  color: #38b2ac;
-  margin-bottom: 18px;
+  color: #00d4ff;
+  margin-bottom: 24px;
   font-size: 2rem;
-  letter-spacing: 1px;
-  background: linear-gradient(90deg, #38b2ac 30%, #4299e1 100%);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #00d4ff, #5865f2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .rooms-container p {
-  color: #b2f5ea;
+  color: #b9bbbe;
   font-size: 1.1rem;
-  margin-top: 12px;
+  margin-top: 16px;
+  line-height: 1.6;
 }
 
-/* Custom styles for room cards and create button */
+/* Room cards styling */
 .room-card {
   background: linear-gradient(135deg, #23272f 80%, #181a20 100%);
   border-radius: 16px;

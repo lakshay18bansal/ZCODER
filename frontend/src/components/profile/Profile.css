@@ -1,28 +1,43 @@
-/* Profile.css - Glassy, glowing, energetic, modern profile card */
-/* Profile Card - Modern, Official, No Footer Collision */
+/* Professional Profile Styling */
 .profile-glass {
-  background: #f5f6fa;
-  border-radius: 18px;
-  box-shadow: 0 8px 40px rgba(44,62,80,0.10), 0 2px 8px rgba(0,0,0,0.10);
-  padding: 40px 32px 32px 32px;
-  margin: 48px auto 48px auto;
+  background: rgba(26, 31, 46, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(79, 84, 92, 0.32);
+  padding: 40px 32px;
+  margin: 48px auto;
   max-width: 700px;
   width: 95%;
-  color: #2d3a4a;
+  color: #ffffff;
   position: relative;
-  border: 1.5px solid #e0e4ea;
   overflow: visible;
-  transition: box-shadow 0.3s, background 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 2;
 }
-/* Remove glow for official look */
+
+.profile-glass:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
 .profile-glow {
-  display: none;
+  position: absolute;
+  top: -4px; left: -4px; right: -4px; bottom: -4px;
+  border-radius: 20px;
+  z-index: -1;
+  background: radial-gradient(ellipse at 60% 0%, rgba(0, 212, 255, 0.1) 0%, rgba(88, 101, 242, 0.1) 100%);
+  filter: blur(16px);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: glowmove 8s ease-in-out infinite alternate;
 }
+
 @keyframes glowmove {
-  0% { background-position: 60% 0%; }
-  100% { background-position: 40% 100%; }
+  0% { background-position: 60% 0%; opacity: 0.4; }
+  100% { background-position: 40% 100%; opacity: 0.6; }
 }
+
 .profile-header {
   display: flex;
   justify-content: space-between;
@@ -274,6 +289,35 @@
 .remove-skill-btn:hover {
   background: #c53030;
   transform: scale(1.1);
+}
+/* Profile modern dark theme */
+.profile-container {
+  background: rgba(35, 37, 38, 0.97);
+  color: #f5f6fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  padding: 28px 20px;
+  margin: 32px auto;
+  max-width: 600px;
+  transition: background 0.5s, color 0.5s;
+}
+.profile-container h2 {
+  color: #ffcb6b;
+}
+.profile-container button {
+  background: #ffcb6b;
+  color: #232526;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 8px 0;
+  transition: background 0.3s, color 0.3s;
+}
+.profile-container button:hover {
+  background: #ffd86b;
+  color: #232526;
 }
 @media (max-width: 700px) {
   .profile-glass {

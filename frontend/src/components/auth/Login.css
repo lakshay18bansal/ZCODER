@@ -5,27 +5,32 @@
   width: 90%;
   margin: 80px auto;
   padding: 40px;
-  background: linear-gradient(145deg, #1c1e24, #181a20);
+  background: rgba(26, 31, 46, 0.95);
   border-radius: 16px;
-  border: 1px solid rgba(56, 178, 172, 0.2);
-  box-shadow: 0 8px 32px rgba(44, 203, 255, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
-  color: #b2f5ea;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid rgba(79, 84, 92, 0.32);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px) saturate(1.2);
+  color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .auth-container:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(44, 203, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
 .auth-container h2 {
   text-align: center;
   margin-bottom: 28px;
-  color: #38b2ac;
+  color: #00d4ff;
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.5px;
   position: relative;
+  background: linear-gradient(135deg, #00d4ff, #5865f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .auth-container h2::after {
@@ -36,7 +41,7 @@
   transform: translateX(-50%);
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, #38b2ac, #4299e1);
+  background: linear-gradient(135deg, #00d4ff, #5865f2);
   border-radius: 3px;
 }
 
@@ -49,37 +54,53 @@
 .auth-container input {
   margin-bottom: 20px;
   padding: 14px 16px;
-  background: #23272f;
-  border: 1.5px solid #38b2ac;
-  border-radius: 10px;
-  color: #b2f5ea;
+  background: rgba(35, 37, 38, 0.8);
+  border: 1px solid rgba(79, 84, 92, 0.32);
+  border-radius: 8px;
+  color: #ffffff;
   font-size: 15px;
-  transition: border 0.3s, box-shadow 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .auth-container input:focus {
   outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
 }
 
 .auth-container button {
   padding: 14px;
-  background: linear-gradient(90deg, #38b2ac, #4299e1);
-  color: #fff;
+  background: linear-gradient(135deg, #00d4ff, #5865f2);
+  color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-container button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-container button:hover::before {
+  left: 100%;
 }
 
 .auth-container button:hover {
-  background: linear-gradient(90deg, #319795, #3182ce);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(56, 178, 172, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
 }
 
 .auth-container button:active {
@@ -130,6 +151,53 @@
   color: #63b3ed;
   max-height: 100px;
   overflow-y: auto;
+}
+
+/* Modern login form styling */
+.login-container {
+  background: rgba(35, 37, 38, 0.95);
+  color: #f5f6fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  padding: 32px 24px;
+  max-width: 350px;
+  margin: 40px auto;
+  transition: background 0.5s, color 0.5s;
+}
+
+.login-container h2 {
+  color: #ffcb6b;
+}
+
+.login-container input {
+  background: #232526;
+  color: #f5f6fa;
+  border: 1px solid #414345;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  transition: background 0.3s, color 0.3s, border 0.3s;
+}
+
+.login-container input:focus {
+  border-color: #ffcb6b;
+  color: #ffcb6b;
+}
+
+.login-container button {
+  background: #ffcb6b;
+  color: #232526;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.login-container button:hover {
+  background: #ffd86b;
+  color: #232526;
 }
 
 /* Responsive styles */
