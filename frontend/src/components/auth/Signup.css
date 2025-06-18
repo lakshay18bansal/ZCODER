@@ -74,6 +74,23 @@
   cursor: pointer;
   transition: all 0.3s;
   letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-container button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.auth-container button:hover::before {
+  left: 100%;
 }
 
 .auth-container button:hover {
@@ -137,29 +154,85 @@
   transition: 0.3s ease all;
 }
 
-.auth-container .form-group input:focus + label,
-.auth-container .form-group input:not(:placeholder-shown) + label {
-  top: -10px;
-  left: 10px;
+.auth-container .form-group input:focus ~ label,
+.auth-container .form-group input:not(:placeholder-shown) ~ label {
+  top: -8px;
+  left: 12px;
   font-size: 12px;
-  background: #23272f;
+  color: #38b2ac;
+  background: #181a20;
   padding: 0 6px;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+/* Form validation styles */
+.auth-container input.error {
+  border-color: #f56565;
+}
+
+.auth-container input.success {
+  border-color: #38b2ac;
+}
+
+.auth-container .error-message {
+  color: #f56565;
+  font-size: 12px;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  padding-left: 16px;
+}
+
+.auth-container .success-message {
+  color: #38b2ac;
+  font-size: 12px;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  padding-left: 16px;
+}
+
+/* Loading state */
+.auth-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-container button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.auth-container button.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
   .auth-container {
-    max-width: 100%;
-    width: 85%;
+    margin: 40px auto;
     padding: 30px 20px;
-    margin: 60px auto;
+    width: 95%;
   }
   
   .auth-container h2 {
     font-size: 24px;
   }
   
-  .auth-container button {
-    padding: 12px;
+  .auth-container input {
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 }

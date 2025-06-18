@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchQuestions } from '../../utils/questions';
-import { Play, Download, Copy, Sun, Moon, Code2, XCircle } from 'lucide-react';
+import { Play, Download, Copy, Sun, Moon, Code2, XCircle, User, LogOut } from 'lucide-react';
 import './Editor.css';
 
 const LANGUAGES = [
@@ -25,11 +25,11 @@ const Editor = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [input, setInput] = useState('');
   const [questions, setQuestions] = useState([]);
-  const [selectedQid, setSelectedQid] = useState('');
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [selectedQid, setSelectedQid] = useState('');  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [username, setUsername] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const codeRef = useRef(null);
-  const lineRef = useRef(null);
-  // Load questions and set from query param if present
+  const lineRef = useRef(null);// Load questions and set from query param if present
   useEffect(() => {
     fetchQuestions().then(qs => {
       setQuestions(qs);
@@ -41,6 +41,15 @@ const Editor = () => {
         setSelectedQuestion(q || null);
       }
     });
+  }, []);
+  // Check if user is logged in and get username
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const storedUsername = localStorage.getItem('username');
+    if (token && storedUsername) {
+      setIsLoggedIn(true);
+      setUsername(storedUsername);
+    }
   }, []);
 
   useEffect(() => {
@@ -86,23 +95,56 @@ const Editor = () => {
 
   // run code
   const onRunCode = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/code/execute', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ language, code, input }),
-      });
-      const data = await response.json();
-      setOutput(data.output || data.error || 'No output');
-    } catch (error) {
-      setOutput('Error connecting to server');
-      console.error(error);
-    }
-  };
+  try {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId'); // get stored userId
+
+    const response = await fetch('http://localhost:5000/api/code/execute', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: JSON.stringify({
+        language,
+        code,
+        input,
+        userId,
+        questionId: selectedQid,
+      }),
+    });
+
+    const data = await response.json();
+    setOutput(data.output || data.error || 'No output');
+  } catch (error) {
+    setOutput('Error connecting to server');
+    console.error(error);
+  }
+};
 
   // clear output
   const onClearOutput = () => {
     setOutput('');
+  };
+  // handle sign out
+  const handleSignOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    setIsLoggedIn(false);
+    setUsername('');
+    // Optionally redirect to login page
+    window.location.href = '/login';
+  };
+
+  // get user initials for avatar
+  const getUserInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   useEffect(() => {
@@ -131,8 +173,7 @@ const Editor = () => {
         <div className="toolbar-group">
           <input type="range" min={12} max={22} value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="font-slider" />
           <span className="font-size-label">{fontSize}px</span>
-        </div>
-        <div className="toolbar-group">
+        </div>        <div className="toolbar-group">
           <select
             className="editor-select"
             value={selectedQid}
@@ -141,7 +182,7 @@ const Editor = () => {
           >
             <option value="">Choose Question</option>
             {questions.map(q => (
-              <option key={q.id} value={q.id}>{q.id} - {q.question.slice(0, 30)}...</option>
+              <option key={q._id} value={q._id}>{q.id} - {q.question.slice(0, 30)}...</option>
             ))}
           </select>
           <button className="icon-btn" onClick={handleCopy} title="Copy Code">
@@ -155,6 +196,19 @@ const Editor = () => {
             <Play size={18} />
           </button>
         </div>
+          {isLoggedIn && (
+          <div className="toolbar-group user-profile-section">
+            <div className="user-profile">
+              <div className="user-avatar">
+                {getUserInitials(username)}
+              </div>
+              <span className="username-text">{username}</span>
+            </div>
+            <button className="icon-btn signout-btn" onClick={handleSignOut} title="Sign Out">
+              <LogOut size={16} />
+            </button>
+          </div>
+        )}
       </div>
 
       {selectedQuestion && (

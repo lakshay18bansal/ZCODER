@@ -12,15 +12,4 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Add a new question
-router.post('/', async (req, res) => {
-  try {
-    const q = new Question(req.body);
-    await q.save();
-    res.status(201).json(q);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
 module.exports = router;

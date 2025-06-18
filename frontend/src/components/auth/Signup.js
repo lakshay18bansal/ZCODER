@@ -2,17 +2,20 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Signup.css';
 
-function Signup() {
+function Signup({ updateAuthState }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:5000/api/auth/signup', { username, password });
       console.log("Response from server:", res);
       setMessage('Signup successful!! You can now log in.');
+      // Redirect to login after successful signup
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
     } catch (err) {
       setMessage(err.response?.data?.error || 'Something went wrong.');
     }
