@@ -4,6 +4,7 @@ import Dashboard from './components/dashboard/dashboard';
 import Profile from './components/profile/Profile';
 import Rooms from './components/rooms/Rooms';
 import Editor from './components/editor/Editor';
+import Submissions from './components/submissions/Submissions';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import './App.css';
@@ -96,13 +97,19 @@ function App() {
             >
               <span className="sidebar-icon">◉</span>
               <span className="sidebar-text">Rooms</span>
-            </Link>
-            <Link 
+            </Link>            <Link 
               to="/editor" 
               className={`sidebar-link ${location.pathname === '/editor' ? 'active' : ''}`}
             >
               <span className="sidebar-icon">◈</span>
               <span className="sidebar-text">Editor</span>
+            </Link>
+            <Link 
+              to="/submissions" 
+              className={`sidebar-link ${location.pathname === '/submissions' ? 'active' : ''}`}
+            >
+              <span className="sidebar-icon">📝</span>
+              <span className="sidebar-text">Submissions</span>
             </Link>
             <Link 
               to="/profile" 
@@ -112,13 +119,14 @@ function App() {
               <span className="sidebar-text">Profile</span>
             </Link></nav>
         </aside>        {/* Main Content */}
-        <main className="main-content">
-          <Routes>
+        <main className="main-content">          <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/rooms" element={<Rooms />} />
-            <Route path="/editor" element={<Editor />} />            <Route path="/login" element={<Login updateAuthState={updateAuthState} />} />
+            <Route path="/editor" element={<Editor />} />            
+            <Route path="/submissions" element={<Submissions />} />
+            <Route path="/login" element={<Login updateAuthState={updateAuthState} />} />
             <Route path="/signup" element={<Signup updateAuthState={updateAuthState} />} />
           </Routes>
         </main>

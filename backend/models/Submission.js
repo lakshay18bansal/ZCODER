@@ -10,6 +10,8 @@ const SubmissionSchema = new mongoose.Schema({
   cpuTime: { type: String },
   memory: { type: String },
   statusCode: { type: String },
+  passed: { type: Boolean, default: false },
+  verdicts: [{ type: String }],
 }, { timestamps: true }); // Adds createdAt and updatedAt
 
 module.exports = mongoose.model('Submission', SubmissionSchema);

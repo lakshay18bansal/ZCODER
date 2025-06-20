@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { fetchQuestions } from '../../utils/questions';
 import { Play, Download, Copy, Sun, Moon, Code2, XCircle, User, LogOut } from 'lucide-react';
 import './Editor.css';
+import axios from "axios";
+import { CheckCircle } from "react-feather";
 
 const LANGUAGES = [
   { value: 'javascript', label: 'JavaScript', icon: <Code2 size={16} /> },
@@ -54,7 +56,7 @@ const Editor = () => {
 
   useEffect(() => {
     if (selectedQid && questions.length) {
-      const q = questions.find(q => q.id === selectedQid);
+      const q = questions.find(q => q._id === selectedQid);
       setSelectedQuestion(q || null);
     }
   }, [selectedQid, questions]);
@@ -121,6 +123,34 @@ const Editor = () => {
     console.error(error);
   }
 };
+    const handleSubmit = async () => {
+  console.log("🔥 Submit button clicked");
+
+  if (!selectedQuestion) {
+    alert("❗Please select a question before submitting.");
+    return;
+  }
+
+  try {
+    const res = await axios.post("http://localhost:5000/api/code/submit", {
+      code,
+      language,
+      questionId: selectedQid,
+      userId: localStorage.getItem('userId'),
+    });
+
+    if (res.data.passed) {
+      alert("✅ All test cases passed!");
+    } else {
+      alert("❌ Some test cases failed. Check below:");
+      setOutput(res.data.verdicts.join("\n\n"));
+    }
+  } catch (err) {
+    console.error("❌ Submit error:", err?.response?.data || err.message);
+    alert("Submission failed");
+  }
+};
+
 
   // clear output
   const onClearOutput = () => {
@@ -194,6 +224,9 @@ const Editor = () => {
           </button>
           <button className="icon-btn run-btn" onClick={onRunCode} title="Run Code">
             <Play size={18} />
+          </button>
+          <button className="icon-btn submit-btn" onClick={handleSubmit} title="Submit Code">
+              <CheckCircle size={18} />
           </button>
         </div>
           {isLoggedIn && (
