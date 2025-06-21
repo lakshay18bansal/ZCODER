@@ -9,12 +9,13 @@ import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import './App.css';
 
+
 function App() {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [username, setUsername] = useState('');
-
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   // Check authentication status on app load
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -55,7 +56,13 @@ function App() {
     <div className="App">
       {/* Top Header with Auth */}
       <header className="top-header">
-        <div className="logo">ZCODER</div>        <div className="auth-section">
+        <div className="logo-section">
+  <button className="hamburger-btn" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
+    ☰
+  </button>
+  <div className="logo">ZCODER</div>
+</div>
+        <div className="auth-section">
           {isLoggedIn ? (
             <div className="user-menu-container">              <button 
                 className="user-avatar"
@@ -83,7 +90,8 @@ function App() {
 
       <div className="app-layout">
         {/* Sidebar Navigation */}
-        <aside className="sidebar">
+        <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+
           <nav className="sidebar-nav">            <Link 
               to="/dashboard" 
               className={`sidebar-link ${(location.pathname === '/dashboard' || location.pathname === '/') ? 'active' : ''}`}

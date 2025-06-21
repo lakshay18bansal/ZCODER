@@ -84,7 +84,7 @@ router.post('/submit', async (req, res) => {
   const question = await Question.findById(questionId);
   if (!question) return res.status(404).json({ error: "Question not found" });
 
-  const results = [];
+  const verdicts = [];
   let allPassed = true;
 
   for (let i = 0; i < question.evaluation_inputs.length; i++) {
@@ -94,23 +94,36 @@ router.post('/submit', async (req, res) => {
     const result = await runCode(code, language, input);
     const passed = result.output.trim() === expected.trim();
 
-    results.push(`Input:\n${input}\nExpected:\n${expected}\nYour Output:\n${result.output}`);
+    verdicts.push({
+      testCase: i + 1,
+      input,
+      expected,
+      output: result.output,
+      passed
+    });
+
     if (!passed) allPassed = false;
   }
 
+  // Save verdicts to DB as text
   const submission = new Submission({
     code,
     language,
     userId,
-    questionId: question._id,
+    questionId,
     passed: allPassed,
-    verdicts: results
+    verdicts: verdicts.map(v => `Test Case ${v.testCase}: ${v.passed ? '✅ Passed' : '❌ Failed'}\nInput: ${v.input}\nExpected: ${v.expected}\nYour Output: ${v.output}`)
   });
 
   await submission.save();
 
-  res.json({ passed: allPassed, verdicts: results });
+  // Send verdicts to frontend as structured JSON
+  res.json({
+    passed: allPassed,
+    verdicts
+  });
 });
+
 
 router.get('/submissions', async (req, res) => {
   const { userId, questionId } = req.query;
