@@ -473,3 +473,65 @@ body {
     padding: 12px;
   }
 }
+
+/* Sidebar Collapse */
+.sidebar.collapsed {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.sidebar {
+  width: 250px; /* your original width */
+  transition: width 0.3s ease;
+}
+
+/* Main content should expand */
+.app-layout {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+/* Optional: adjust margin-left only if needed */
+.sidebar.collapsed + .main-content {
+  margin-left: 0;
+}
+
+/* Logo + Hamburger style */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.sidebar {
+  width: 220px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 0;
+}
+
+.main-content {
+  flex-grow: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed ~ .main-content {
+  margin-left: 0;
+}

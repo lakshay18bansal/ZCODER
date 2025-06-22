@@ -3,6 +3,7 @@ const router = express.Router();
 const axios = require('axios');
 const Submission = require('../models/Submission');
 const Question = require('../models/Question');
+const User = require('../models/User');
 require('dotenv').config();
 
 const clientId = process.env.JDOODLE_CLIENT_ID;
@@ -84,7 +85,7 @@ router.post('/submit', async (req, res) => {
   const question = await Question.findById(questionId);
   if (!question) return res.status(404).json({ error: "Question not found" });
 
-  const results = [];
+  const verdicts = [];
   let allPassed = true;
 
   for (let i = 0; i < question.evaluation_inputs.length; i++) {
@@ -94,23 +95,36 @@ router.post('/submit', async (req, res) => {
     const result = await runCode(code, language, input);
     const passed = result.output.trim() === expected.trim();
 
-    results.push(`Input:\n${input}\nExpected:\n${expected}\nYour Output:\n${result.output}`);
+    verdicts.push({
+      testCase: i + 1,
+      input,
+      expected,
+      output: result.output,
+      passed
+    });
+
     if (!passed) allPassed = false;
   }
 
+  // Save verdicts to DB as text
   const submission = new Submission({
     code,
     language,
     userId,
-    questionId: question._id,
+    questionId,
     passed: allPassed,
-    verdicts: results
+    verdicts: verdicts.map(v => `Test Case ${v.testCase}: ${v.passed ? '✅ Passed' : '❌ Failed'}\nInput: ${v.input}\nExpected: ${v.expected}\nYour Output: ${v.output}`)
   });
 
   await submission.save();
 
-  res.json({ passed: allPassed, verdicts: results });
+  // Send verdicts to frontend as structured JSON
+  res.json({
+    passed: allPassed,
+    verdicts
+  });
 });
+
 
 router.get('/submissions', async (req, res) => {
   const { userId, questionId } = req.query;
@@ -142,5 +156,33 @@ router.get('/submissions/:userId', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch user submissions' });
   }
 });
+
+router.get('/metrics/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const submissions = await Submission.find({ userId }).populate('questionId', 'id');
+
+    const solvedSet = new Set();
+    submissions.forEach(sub => {
+      if (sub.passed && sub.questionId?.id) {
+        solvedSet.add(sub.questionId.id);
+      }
+    });
+
+    const solved = solvedSet.size;
+    const submissionsCount = submissions.length;
+
+    // 👉 Fetch bookmarked count
+    const user = await User.findById(userId).populate('bookmarks', 'id');
+    const bookmarked = user?.bookmarks?.length || 0;
+
+    res.json({ solved, submissions: submissionsCount, bookmarked });
+  } catch (err) {
+    console.error('Metrics fetch error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch metrics' });
+  }
+});
+
 
 module.exports = router;

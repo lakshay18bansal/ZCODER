@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import Dashboard from './components/dashboard/dashboard';
 import Profile from './components/profile/Profile';
@@ -7,14 +7,34 @@ import Editor from './components/editor/Editor';
 import Submissions from './components/submissions/Submissions';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
+import BlogList from './components/blog/BlogList';
+import BlogPost from './components/blog/BlogPost';
+import BlogForm from './components/blog/BlogForm';
 import './App.css';
+
 
 function App() {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [username, setUsername] = useState('');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const sidebarRef = useRef(null);
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      sidebarRef.current &&
+      !sidebarRef.current.contains(event.target) &&
+      !event.target.classList.contains('hamburger-btn') &&
+      !sidebarCollapsed
+    ) {
+      setSidebarCollapsed(true);
+    }
+  };
 
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, [sidebarCollapsed]);
   // Check authentication status on app load
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -51,13 +71,34 @@ function App() {
       .slice(0, 2);
   };
 
+  useEffect(() => {
+  const theme = localStorage.getItem('theme');
+  if (theme === 'light') {
+    document.body.classList.add('light-theme');
+  }
+  }, []);
+
+  const toggleTheme = () => {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  };
+
   return (
     <div className="App">
       {/* Top Header with Auth */}
       <header className="top-header">
-        <div className="logo">ZCODER</div>        <div className="auth-section">
+        <div className="logo-section">
+  <button className="hamburger-btn" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
+    ☰
+  </button>
+  <Link to="/dashboard" className="logo" style={{ textDecoration: 'none', color: 'inherit' }}>
+  ZCODER
+</Link>
+</div>
+        <div className="auth-section">
           {isLoggedIn ? (
-            <div className="user-menu-container">              <button 
+            <div className="user-menu-container">           
+            <button 
                 className="user-avatar"
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
@@ -83,7 +124,10 @@ function App() {
 
       <div className="app-layout">
         {/* Sidebar Navigation */}
-        <aside className="sidebar">
+        <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}
+        ref={sidebarRef}
+        >
+
           <nav className="sidebar-nav">            <Link 
               to="/dashboard" 
               className={`sidebar-link ${(location.pathname === '/dashboard' || location.pathname === '/') ? 'active' : ''}`}
@@ -103,13 +147,19 @@ function App() {
             >
               <span className="sidebar-icon">◈</span>
               <span className="sidebar-text">Editor</span>
-            </Link>
-            <Link 
+            </Link>            <Link 
               to="/submissions" 
               className={`sidebar-link ${location.pathname === '/submissions' ? 'active' : ''}`}
             >
               <span className="sidebar-icon">📝</span>
               <span className="sidebar-text">Submissions</span>
+            </Link>
+            <Link 
+              to="/blogs" 
+              className={`sidebar-link ${location.pathname.startsWith('/blogs') ? 'active' : ''}`}
+            >
+              <span className="sidebar-icon">📚</span>
+              <span className="sidebar-text">Blogs</span>
             </Link>
             <Link 
               to="/profile" 
@@ -124,8 +174,11 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/rooms" element={<Rooms />} />
-            <Route path="/editor" element={<Editor />} />            
-            <Route path="/submissions" element={<Submissions />} />
+            <Route path="/editor" element={<Editor />} />              <Route path="/submissions" element={<Submissions />} />
+            <Route path="/blogs" element={<BlogList />} />
+            <Route path="/blogs/new" element={<BlogForm />} />
+            <Route path="/blogs/:id" element={<BlogPost />} />
+            <Route path="/blogs/:id/edit" element={<BlogForm />} />
             <Route path="/login" element={<Login updateAuthState={updateAuthState} />} />
             <Route path="/signup" element={<Signup updateAuthState={updateAuthState} />} />
           </Routes>

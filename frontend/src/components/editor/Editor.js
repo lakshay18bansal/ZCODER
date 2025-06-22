@@ -4,6 +4,9 @@ import { Play, Download, Copy, Sun, Moon, Code2, XCircle, User, LogOut } from 'l
 import './Editor.css';
 import axios from "axios";
 import { CheckCircle } from "react-feather";
+import SplitPane from 'react-split-pane';
+import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 const LANGUAGES = [
   { value: 'javascript', label: 'JavaScript', icon: <Code2 size={16} /> },
@@ -19,6 +22,7 @@ const THEMES = [
 ];
 
 const Editor = () => {
+  
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState('javascript');
   const [theme, setTheme] = useState('dark');
@@ -30,20 +34,29 @@ const Editor = () => {
   const [selectedQid, setSelectedQid] = useState('');  const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showVerdictPopup, setShowVerdictPopup] = useState(false);
+  const [verdictResults, setVerdictResults] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+const [submitVerdicts, setSubmitVerdicts] = useState([]);  
   const codeRef = useRef(null);
-  const lineRef = useRef(null);// Load questions and set from query param if present
+  const lineRef = useRef(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    fetchQuestions().then(qs => {
-      setQuestions(qs);
-      const params = new URLSearchParams(window.location.search);
-      const qid = params.get('qid');
-      if (qid) {
-        setSelectedQid(qid);
-        const q = qs.find(q => q.id === qid);
-        setSelectedQuestion(q || null);
+  fetchQuestions().then(qs => {
+    setQuestions(qs);
+    const params = new URLSearchParams(window.location.search);
+    const qid = params.get('qid'); // this is question.id
+    if (qid) {
+      const q = qs.find(q => q.id === qid);
+      if (q) {
+        setSelectedQid(q._id);
+        setSelectedQuestion(q);
       }
-    });
-  }, []);
+    }
+  });
+}, []);
+
   // Check if user is logged in and get username
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -53,15 +66,6 @@ const Editor = () => {
       setUsername(storedUsername);
     }
   }, []);
-
-  useEffect(() => {
-    if (selectedQid && questions.length) {
-      const q = questions.find(q => q._id === selectedQid);
-      setSelectedQuestion(q || null);
-    }
-  }, [selectedQid, questions]);
-  // ...existing code...
-  // Add question selector
 
   // line numbers
   const getLineNumbers = () => {
@@ -131,6 +135,9 @@ const Editor = () => {
     return;
   }
 
+  setIsSubmitting(true);
+  setSubmitVerdicts([]);
+
   try {
     const res = await axios.post("http://localhost:5000/api/code/submit", {
       code,
@@ -139,17 +146,16 @@ const Editor = () => {
       userId: localStorage.getItem('userId'),
     });
 
-    if (res.data.passed) {
-      alert("✅ All test cases passed!");
-    } else {
-      alert("❌ Some test cases failed. Check below:");
-      setOutput(res.data.verdicts.join("\n\n"));
+    setSubmitVerdicts(res.data.verdicts || []);
+    if (!res.data.passed) {
+      setOutput(res.data.verdicts.map(v => `Test Case ${v.testCase}: ${v.passed ? '✅ Passed' : '❌ Failed'}`).join("\n"));
     }
   } catch (err) {
     console.error("❌ Submit error:", err?.response?.data || err.message);
-    alert("Submission failed");
+    setSubmitVerdicts([{ testCase: 0, passed: false, input: '', expected: '', output: 'Submission failed' }]);
   }
 };
+
 
 
   // clear output
@@ -183,6 +189,7 @@ const Editor = () => {
       return () => clearTimeout(t);
     }
   }, [isCopied]);
+
 
   return (
     <div className={`editor-glass editor-theme-${theme}`}>
@@ -226,7 +233,7 @@ const Editor = () => {
             <Play size={18} />
           </button>
           <button className="icon-btn submit-btn" onClick={handleSubmit} title="Submit Code">
-              <CheckCircle size={18} />
+              <CheckCircle size={18} />&nbsp;Submit
           </button>
         </div>
           {isLoggedIn && (
@@ -247,7 +254,7 @@ const Editor = () => {
       {selectedQuestion && (
         <div style={{ background: '#23272f', color: '#b2f5ea', borderRadius: 8, padding: 12, margin: '12px 0' }}>
           <div><strong>Question {selectedQuestion.id}:</strong> {selectedQuestion.question}</div>
-          <div style={{ fontSize: 13, marginTop: 4 }}>
+          <div style={{ fontSize: 13, marginTop: 2 }}>
             <strong>Input:</strong> {selectedQuestion.input_format} | <strong>Output:</strong> {selectedQuestion.output_format}
           </div>
         </div>
@@ -283,7 +290,7 @@ const Editor = () => {
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Optional input (e.g., for scanf, cin, input())"
-            style={{ fontSize: 14, minHeight: 60 }}
+            style={{ fontSize: 15, minHeight: 60 }}
           />
 
           <div className="output-header" style={{ marginTop: 16 }}>
@@ -305,6 +312,48 @@ const Editor = () => {
           </div>
         </div>
       </div>
+      {isSubmitting && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3>Evaluating Test Cases...</h3>
+      {submitVerdicts.length === 0 ? (
+        <div className="loader"></div>
+      ) : (
+        <div className="verdict-list">
+          {submitVerdicts.map((v, i) => (
+            <div key={i} style={{ marginBottom: 10 }}>
+              <strong>Test Case {v.testCase}:</strong> {v.passed ? '✅ Passed' : '❌ Failed'}
+              <pre style={{ fontSize: 13, marginTop: 4 }}>
+                Input: {v.input}
+                {"\n"}Expected: {v.expected}
+                {"\n"}Your Output: {v.output}
+              </pre>
+            </div>
+          ))}
+        </div>
+      )}
+      <button 
+        onClick={() => {
+          setIsSubmitting(false);
+          navigate('/submissions');
+        }} 
+        style={{
+          marginTop: 12,
+          padding: '8px 16px',
+          backgroundColor: '#38b2ac',
+          border: 'none',
+          color: 'white',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+        }}
+      >
+        Close & View Submissions
+      </button>
+
+    </div>
+  </div>
+)}
     </div>
   );
 };
