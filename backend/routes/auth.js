@@ -41,4 +41,74 @@ router.post('/signin', async (req, res) => {
     }
 });
 
+router.put('/update-profile', async (req, res) => {
+  const { userId, name, email, bio, skills } = req.body;
+
+  if (!userId) return res.status(400).json({ message: "Missing userId" });
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { name, email, bio, skills },
+      { new: true }
+    );
+
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ message: "Profile updated", user: updatedUser });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+router.get('/get-profile/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({
+      username: user.username,
+      name: user.name || user.username,
+      email: user.email || `${user.username}@zcoder.com`,
+      bio: user.bio || `Hello! I'm ${user.name || user.username}, a passionate coder. I love solving challenging problems and improving my programming skills every day.`,
+      skills: user.skills || ['Problem Solving'],
+
+      solvedProblems: user.solvedProblems || 0,
+      ranking: user.ranking || 1,
+      streak: user.streak || 1,
+      totalSubmissions: user.totalSubmissions || 0,
+      successRate: user.successRate || 0,
+      createdAt: user.createdAt
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/rankings', async (req, res) => {
+  try {
+    const users = await User.find({}, 'username solvedProblems streak successRate').lean();
+
+    const scoredUsers = users.map(user => ({
+      ...user,
+      score: (user.solvedProblems * 10) + (user.streak * 2) + user.successRate
+    }));
+
+    scoredUsers.sort((a, b) => b.score - a.score);
+
+    const rankings = scoredUsers.map((user, index) => ({
+      username: user.username,
+      ranking: index + 1,
+      score: user.score
+    }));
+
+    res.json(rankings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
