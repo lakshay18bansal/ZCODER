@@ -24,7 +24,7 @@ const Submissions = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:5000/api/code/submissions/${userId}`, {
+      const response = await axios.get(`https://zcoder-backend-b6ii.onrender.com/api/code/submissions/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

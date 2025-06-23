@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [submissionCount, setSubmissionCount] = useState(null);
   const fetchBookmarks = async (uid) => {
   try {
-    const res = await fetch(`http://localhost:5000/api/bookmarks/${uid}`);
+    const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
     const data = await res.json();
     setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
   } catch (err) {
@@ -23,7 +23,7 @@ const Dashboard = () => {
 };
 
   const fetchDashboardMetrics = async (userId) => {
-  const res = await fetch(`http://localhost:5000/api/code/metrics/${userId}`); // Updated to absolute URL for dev
+  const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/code/metrics/${userId}`); // Updated to absolute URL for dev
   if (!res.ok) throw new Error('Failed to fetch dashboard metrics');
   return res.json();
 };
@@ -39,7 +39,7 @@ const Dashboard = () => {
       setSubmissionCount(metrics.submissions);
 
       // ✅ accurate bookmarks (from /api/bookmarks)
-      const res = await fetch(`http://localhost:5000/api/bookmarks/${uid}`);
+      const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
       const data = await res.json();
       setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id))); // use _id for Mongo refs
     } catch (err) {
@@ -58,7 +58,7 @@ const Dashboard = () => {
   if (!uid) return;
 
   try {
-    const res = await fetch('http://localhost:5000/api/bookmarks/toggle', {
+    const res = await fetch('https://zcoder-backend-b6ii.onrender.com/api/bookmarks/toggle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: uid, questionId: qid }),

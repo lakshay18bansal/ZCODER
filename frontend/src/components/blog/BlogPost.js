@@ -38,7 +38,7 @@ const BlogPost = () => {
         setError('');
         
         try {
-            const response = await axios.get(`http://localhost:5000/api/blogs/${id}`);
+            const response = await axios.get(`https://zcoder-backend-b6ii.onrender.com/api/blogs/${id}`);
             console.log(`✅ [BLOG POST] Blog loaded: "${response.data.title}"`);
             console.log(`💬 [BLOG POST] Comments count: ${response.data.comments.length}`);
             setBlog(response.data);
@@ -63,7 +63,7 @@ const BlogPost = () => {
         
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/blogs/${id}`, {
+            await axios.delete(`https://zcoder-backend-b6ii.onrender.com/api/blogs/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
