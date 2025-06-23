@@ -100,21 +100,35 @@ GENERATE_SOURCEMAP=false
 
 ### Common Issues:
 
-**1. CORS Errors:**
+**1. Express Path-to-Regexp Error:**
+If you see errors related to `path-to-regexp` or Express routes:
+```bash
+# Run the fix script
+./fix-backend.bat   # Windows
+./fix-backend.sh    # Linux/Mac
+
+# Or manually:
+cd backend
+rm -rf node_modules package-lock.json
+npm install
+```
+This fixes Express version compatibility issues.
+
+**2. CORS Errors:**
 - Ensure `FRONTEND_URL` environment variable is correctly set
 - Check that both apps are deployed and URLs are correct
 
-**2. Database Connection Errors:**
+**3. Database Connection Errors:**
 - Verify MongoDB URI is correct
 - Check IP whitelist in MongoDB Atlas
 - Ensure database user has proper permissions
 
-**3. Build Failures:**
+**4. Build Failures:**
 - Check build logs in Render dashboard
 - Ensure all dependencies are in package.json
 - Verify Node.js version compatibility
 
-**4. Environment Variables Not Working:**
+**5. Environment Variables Not Working:**
 - Frontend env vars must start with `REACT_APP_`
 - Restart services after adding new environment variables
 - Check for typos in variable names
