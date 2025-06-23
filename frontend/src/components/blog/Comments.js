@@ -29,7 +29,7 @@ const Comments = ({ postId, comments, currentUser, onCommentAdded, onCommentDele
         try {
             const token = localStorage.getItem('token');
             const response = await axios.post(
-                `http://localhost:5000/api/blogs/${postId}/comments`,
+                `https://zcoder-backend-b6ii.onrender.com/api/blogs/${postId}/comments`,
                 { text: newComment.trim() },
                 {
                     headers: {
@@ -70,7 +70,7 @@ const Comments = ({ postId, comments, currentUser, onCommentAdded, onCommentDele
         try {
             const token = localStorage.getItem('token');
             await axios.delete(
-                `http://localhost:5000/api/blogs/${postId}/comments/${commentId}`,
+                `https://zcoder-backend-b6ii.onrender.com/api/blogs/${postId}/comments/${commentId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`

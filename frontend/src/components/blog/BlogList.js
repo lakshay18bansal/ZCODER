@@ -24,7 +24,7 @@ const BlogList = () => {
 
     const fetchMetadata = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/blogs');
+            const response = await axios.get('https://zcoder-backend-b6ii.onrender.com/api/blogs');
             const allBlogs = response.data.blogs;
             
             // Extract unique tags
@@ -57,7 +57,7 @@ const BlogList = () => {
             if (filters.author) params.append('author', filters.author);
             if (filters.dateRange !== 'all') params.append('dateRange', filters.dateRange);
             
-            const response = await axios.get(`http://localhost:5000/api/blogs?${params}`);
+            const response = await axios.get(`https://zcoder-backend-b6ii.onrender.com/api/blogs?${params}`);
             console.log(`✅ [BLOG LIST] Received ${response.data.blogs.length} blogs`);
             console.log(`📄 [BLOG LIST] Pagination:`, response.data.pagination);
             

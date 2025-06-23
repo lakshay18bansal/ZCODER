@@ -105,7 +105,7 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId'); // get stored userId
 
-    const response = await fetch('http://localhost:5000/api/code/execute', {
+    const response = await fetch('https://zcoder-backend-b6ii.onrender.com/api/code/execute', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
   setSubmitVerdicts([]);
 
   try {
-    const res = await axios.post("http://localhost:5000/api/code/submit", {
+    const res = await axios.post("https://zcoder-backend-b6ii.onrender.com/api/code/submit", {
       code,
       language,
       questionId: selectedQid,

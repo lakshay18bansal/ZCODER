@@ -28,7 +28,7 @@ const BlogForm = () => {
         setLoadingPost(true);
         
         try {
-            const response = await axios.get(`http://localhost:5000/api/blogs/${id}`);
+            const response = await axios.get(`https://zcoder-backend-b6ii.onrender.com/api/blogs/${id}`);
             const blog = response.data;
             
             console.log(`✅ [BLOG FORM] Blog loaded for editing: "${blog.title}"`);
@@ -101,7 +101,7 @@ const BlogForm = () => {
             
             let response;
             if (isEditing) {
-                response = await axios.put(`http://localhost:5000/api/blogs/${id}`, payload, {
+                response = await axios.put(`https://zcoder-backend-b6ii.onrender.com/api/blogs/${id}`, payload, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ const BlogForm = () => {
                 });
                 console.log(`✅ [BLOG FORM] Blog updated successfully`);
             } else {
-                response = await axios.post('http://localhost:5000/api/blogs', payload, {
+                response = await axios.post('https://zcoder-backend-b6ii.onrender.com/api/blogs', payload, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'

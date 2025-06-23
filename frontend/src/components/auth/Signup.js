@@ -9,7 +9,7 @@ function Signup({ updateAuthState }) {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/signup', { username, password });
+      const res = await axios.post('https://zcoder-backend-b6ii.onrender.com/api/auth/signup', { username, password });
       console.log("Response from server:", res);
       setMessage('Signup successful!! You can now log in.');
       // Redirect to login after successful signup

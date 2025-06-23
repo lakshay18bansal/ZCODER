@@ -19,15 +19,15 @@ const Profile = () => {
     setIsLoggedIn(true);
 
     // Fetch profile info
-    fetch(`http://localhost:5000/api/auth/get-profile/${userId}`)
+    fetch(`https://zcoder-backend-b6ii.onrender.com/api/auth/get-profile/${userId}`)
       .then(res => res.json())
       .then(profileData => {
         // Fetch metrics
-        fetch(`http://localhost:5000/api/code/metrics/${userId}`)
+        fetch(`https://zcoder-backend-b6ii.onrender.com/api/code/metrics/${userId}`)
           .then(res => res.json())
           .then(metricData => {
             // Fetch rankings
-            fetch("http://localhost:5000/api/auth/rankings")
+            fetch("https://zcoder-backend-b6ii.onrender.com/api/auth/rankings")
               .then(res => res.json())
               .then(rankings => {
                 const userRankObj = rankings.find(r =>
@@ -81,7 +81,7 @@ const Profile = () => {
 
   const handleEdit = () => {
   if (isEditing) {
-    fetch("http://localhost:5000/api/auth/update-profile", {
+    fetch("https://zcoder-backend-b6ii.onrender.com/api/auth/update-profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const Profile = () => {
       setEditProfile({ ...editProfile, skills: newSkills });
     };
     const handleSkillSave = () => {
-    fetch("http://localhost:5000/api/auth/update-profile", {
+    fetch("https://zcoder-backend-b6ii.onrender.com/api/auth/update-profile", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
