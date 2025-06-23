@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: zcoder-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
