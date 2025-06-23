@@ -4,11 +4,8 @@ services:
     env: node
     plan: free
     buildCommand: npm install
-    startCommand: npm start
-    healthCheckPath: /api/health
+    startCommand: node server.js
     envVars:
-      - key: NODE_ENV
-        value: production
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET

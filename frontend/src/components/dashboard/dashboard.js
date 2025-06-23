@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Code } from 'lucide-react';
 import './dashboard.css';
 import { fetchQuestions } from '../../utils/questions';
-import { buildApiUrl, API_CONFIG } from '../../config/api';
 
 
 const Dashboard = () => {
@@ -12,17 +11,19 @@ const Dashboard = () => {
   const [filterTag, setFilterTag] = useState('');
   const [search, setSearch] = useState('');
   const [solvedCount, setSolvedCount] = useState(null);
-  const [submissionCount, setSubmissionCount] = useState(null);  const fetchBookmarks = async (uid) => {
+  const [submissionCount, setSubmissionCount] = useState(null);
+  const fetchBookmarks = async (uid) => {
   try {
-    const res = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.BOOKMARKS.GET}/${uid}`));
+    const res = await fetch(`http://localhost:5000/api/bookmarks/${uid}`);
     const data = await res.json();
     setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
   } catch (err) {
     console.error('Failed to fetch bookmarks:', err);
   }
 };
+
   const fetchDashboardMetrics = async (userId) => {
-  const res = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.CODE.METRICS}/${userId}`));
+  const res = await fetch(`http://localhost:5000/api/code/metrics/${userId}`); // Updated to absolute URL for dev
   if (!res.ok) throw new Error('Failed to fetch dashboard metrics');
   return res.json();
 };
@@ -35,8 +36,10 @@ const Dashboard = () => {
       const metrics = await fetchDashboardMetrics(uid);
       console.log("✅ Metrics received:", metrics);
       setSolvedCount(metrics.solved);
-      setSubmissionCount(metrics.submissions);      // ✅ accurate bookmarks (from /api/bookmarks)
-      const res = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.BOOKMARKS.GET}/${uid}`));
+      setSubmissionCount(metrics.submissions);
+
+      // ✅ accurate bookmarks (from /api/bookmarks)
+      const res = await fetch(`http://localhost:5000/api/bookmarks/${uid}`);
       const data = await res.json();
       setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id))); // use _id for Mongo refs
     } catch (err) {
@@ -53,8 +56,9 @@ const Dashboard = () => {
   const toggleBookmark = async (qid) => {
   const uid = localStorage.getItem('userId');
   if (!uid) return;
+
   try {
-    const res = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.BOOKMARKS.TOGGLE), {
+    const res = await fetch('http://localhost:5000/api/bookmarks/toggle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: uid, questionId: qid }),

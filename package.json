@@ -1,18 +1,5 @@
 {
-  "name": "zcoder-dev-scripts",
-  "version": "1.0.0",
-  "description": "Development scripts for ZCODER project",  "scripts": {
-    "dev": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\"",
-    "dev:backend": "cd backend && npm start",
-    "dev:frontend": "cd frontend && npm start",
-    "dev:simple": "start cmd /k \"cd backend && npm start\" && timeout /t 3 /nobreak && start cmd /k \"cd frontend && npm start\"",
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
-    "start": "npm run dev"
-  },
   "dependencies": {
     "react-split-pane": "^0.1.92"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
   }
 }
