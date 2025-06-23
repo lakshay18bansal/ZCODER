@@ -117,6 +117,51 @@ router.post('/submit', async (req, res) => {
   });
 
   await submission.save();
+  const user = await User.findById(userId);
+
+  if (user) {
+    // total submissions always increment
+    user.totalSubmissions += 1;
+
+    if (allPassed) {
+      // Only count if the question was not solved before
+      const alreadySolved = await Submission.findOne({
+        userId,
+        questionId,
+        passed: true,
+        _id: { $ne: submission._id }
+      });
+
+      if (!alreadySolved) {
+        user.solvedProblems += 1;
+      }
+    }
+      const today = new Date();
+      const last = user.lastSubmissionDate;
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+
+      const isSameDay = (d1, d2) =>
+        d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate();
+
+      if (!last || !isSameDay(last, today)) {
+        if (last && isSameDay(last, yesterday)) {
+          user.streak += 1;
+        } else {
+          user.streak = 1;
+        }
+
+        user.lastSubmissionDate = today;
+      }
+
+      // successRate
+      user.successRate = user.totalSubmissions > 0
+        ? Math.round((user.solvedProblems / user.totalSubmissions) * 100)
+        : 0;
+    await user.save();
+  }
 
   // Send verdicts to frontend as structured JSON
   res.json({
@@ -164,20 +209,23 @@ router.get('/metrics/:userId', async (req, res) => {
     const submissions = await Submission.find({ userId }).populate('questionId', 'id');
 
     const solvedSet = new Set();
+    let correct = 0;
+
     submissions.forEach(sub => {
       if (sub.passed && sub.questionId?.id) {
         solvedSet.add(sub.questionId.id);
+        correct += 1;
       }
     });
 
     const solved = solvedSet.size;
     const submissionsCount = submissions.length;
+    const successRate = submissionsCount > 0 ? ((correct / submissionsCount) * 100).toFixed(2) : 0;
 
-    // 👉 Fetch bookmarked count
     const user = await User.findById(userId).populate('bookmarks', 'id');
     const bookmarked = user?.bookmarks?.length || 0;
 
-    res.json({ solved, submissions: submissionsCount, bookmarked });
+    res.json({ solved, submissions: submissionsCount, successRate, bookmarked });
   } catch (err) {
     console.error('Metrics fetch error:', err.message);
     res.status(500).json({ error: 'Failed to fetch metrics' });

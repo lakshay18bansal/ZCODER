@@ -2,7 +2,6 @@ import React, { useState, useEffect,useRef } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import Dashboard from './components/dashboard/dashboard';
 import Profile from './components/profile/Profile';
-import Rooms from './components/rooms/Rooms';
 import Editor from './components/editor/Editor';
 import Submissions from './components/submissions/Submissions';
 import Login from './components/auth/Login';
@@ -134,14 +133,7 @@ function App() {
             >
               <span className="sidebar-icon">⚡</span>
               <span className="sidebar-text">Dashboard</span>
-            </Link>
-            <Link 
-              to="/rooms" 
-              className={`sidebar-link ${location.pathname === '/rooms' ? 'active' : ''}`}
-            >
-              <span className="sidebar-icon">◉</span>
-              <span className="sidebar-text">Rooms</span>
-            </Link>            <Link 
+            </Link>           <Link 
               to="/editor" 
               className={`sidebar-link ${location.pathname === '/editor' ? 'active' : ''}`}
             >
@@ -173,7 +165,6 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/rooms" element={<Rooms />} />
             <Route path="/editor" element={<Editor />} />              <Route path="/submissions" element={<Submissions />} />
             <Route path="/blogs" element={<BlogList />} />
             <Route path="/blogs/new" element={<BlogForm />} />

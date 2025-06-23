@@ -7,38 +7,66 @@ const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [editProfile, setEditProfile] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isEditingSkills, setIsEditingSkills] = useState(false);
 
   // Load user profile from localStorage and set default values
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
-    const userId = localStorage.getItem('userId');
-    
-    if (token && username) {
-      setIsLoggedIn(true);
-      
-      // Create profile object with actual user data and reasonable defaults
-      const userProfile = {
-        name: username,
-        email: `${username}@zcoder.com`, // Default email based on username
-        bio: `Hello! I'm ${username}, a passionate coder on ZCODER platform. I love solving challenging problems and improving my programming skills every day.`,
-        skills: ['JavaScript', 'Python', 'React', 'Problem Solving'], // Default skills
-        solvedProblems: 0, // These would come from backend in real app
-        ranking: 999,
-        streak: 1,
-        joinDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-        totalSubmissions: 0,
-        successRate: 0
-      };
-      
-      setProfile(userProfile);
-      setEditProfile(userProfile);
-    } else {
-      setIsLoggedIn(false);
-      setProfile(null);
-      setEditProfile(null);
-    }
-  }, []);
+  const token = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+  const userId = localStorage.getItem("userId");
+
+  if (token && username && userId) {
+    setIsLoggedIn(true);
+
+    // Fetch profile info
+    fetch(`http://localhost:5000/api/auth/get-profile/${userId}`)
+      .then(res => res.json())
+      .then(profileData => {
+        // Fetch metrics
+        fetch(`http://localhost:5000/api/code/metrics/${userId}`)
+          .then(res => res.json())
+          .then(metricData => {
+            // Fetch rankings
+            fetch("http://localhost:5000/api/auth/rankings")
+              .then(res => res.json())
+              .then(rankings => {
+                const userRankObj = rankings.find(r =>
+                  r.username === profileData.username || r.username === profileData.name
+                );
+                const ranking = userRankObj ? userRankObj.ranking : 999;
+
+                const userProfile = {
+                  name: profileData.name,
+                  email: profileData.email,
+                  bio: profileData.bio,
+                  skills: profileData.skills,
+                  solvedProblems: metricData.solved,
+                  totalSubmissions: metricData.submissions,
+                  successRate: metricData.successRate || 0,
+                  streak: profileData.streak || 0,
+                  ranking: ranking,
+                  joinDate: new Date(profileData.createdAt).toLocaleDateString('en-US', {
+                    month: 'long',
+                    year: 'numeric'
+                  }),
+                };
+
+                setProfile(userProfile);
+                setEditProfile(userProfile);
+              });
+          });
+      })
+      .catch(err => {
+        console.error("Failed to load profile:", err);
+      });
+  } else {
+    setIsLoggedIn(false);
+    setProfile(null);
+    setEditProfile(null);
+  }
+}, []);
+
+
 
   // Get user initials for avatar
   const getUserInitials = (name) => {
@@ -52,9 +80,51 @@ const Profile = () => {
   };
 
   const handleEdit = () => {
-    if (isEditing) setProfile(editProfile);
-    setIsEditing(!isEditing);
-  };
+  if (isEditing) {
+    fetch("http://localhost:5000/api/auth/update-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: localStorage.getItem("userId"),
+        name: editProfile.name,
+        email: editProfile.email,
+        bio: editProfile.bio,
+        skills: editProfile.skills,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          // Update only editable fields
+          setProfile((prev) => ({
+            ...prev,
+            name: data.user.name,
+            email: data.user.email,
+            bio: data.user.bio,
+            skills: data.user.skills,
+          }));
+
+          setEditProfile((prev) => ({
+            ...prev,
+            name: data.user.name,
+            email: data.user.email,
+            bio: data.user.bio,
+            skills: data.user.skills,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.error("Profile update failed:", err);
+      });
+  }
+
+  setIsEditing(!isEditing);
+};
+
+
+
 
   const handleChange = e => {
     setEditProfile({ ...editProfile, [e.target.name]: e.target.value });
@@ -70,8 +140,34 @@ const Profile = () => {
     setEditProfile({ ...editProfile, skills: [...editProfile.skills, ''] });
   };
   const handleRemoveSkill = idx => {
-    const newSkills = editProfile.skills.filter((_, i) => i !== idx);
-    setEditProfile({ ...editProfile, skills: newSkills });
+      const newSkills = editProfile.skills.filter((_, i) => i !== idx);
+      setEditProfile({ ...editProfile, skills: newSkills });
+    };
+    const handleSkillSave = () => {
+    fetch("http://localhost:5000/api/auth/update-profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: localStorage.getItem("userId"),
+        skills: editProfile.skills,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setProfile((prev) => ({
+            ...prev,
+            skills: data.user.skills,
+          }));
+          setEditProfile((prev) => ({
+            ...prev,
+            skills: data.user.skills,
+          }));
+        }
+      })
+      .catch((err) => console.error("Skill update failed:", err));
+
+    setIsEditingSkills(false);
   };
 
   // Show login prompt if user is not logged in
@@ -212,51 +308,61 @@ const Profile = () => {
       </div>
 
       {/* Skills Section */}
+      {/* Skills Section */}
       <div className="profile-section">
         <div className="section-header">
           <h3 className="section-title">
             <Award size={24} />
             <span>Technical Skills</span>
           </h3>
-          {isEditing && (
-            <button className="add-skill-btn" onClick={handleAddSkill}>
-              <span>+ Add Skill</span>
+          {isEditingSkills ? (
+            <div className="skill-btns">
+              <button className="save-skill-btn" onClick={handleSkillSave}>
+                Save
+              </button>
+              <button className="cancel-skill-btn" onClick={() => setIsEditingSkills(false)}>
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button className="edit-skill-btn" onClick={() => setIsEditingSkills(true)}>
+              Edit Skills
             </button>
           )}
         </div>
-        
-        <div className="skills-container">
-          {isEditing ? (
-            <div className="skills-edit-grid">
-              {editProfile.skills.map((skill, idx) => (
-                <div className="skill-edit-item" key={idx}>
-                  <input
-                    className="skill-edit-input"
-                    value={skill}
-                    onChange={e => handleSkillChange(idx, e.target.value)}
-                    placeholder="Enter skill..."
-                  />
-                  <button 
-                    className="remove-skill-btn" 
-                    onClick={() => handleRemoveSkill(idx)}
-                    title="Remove Skill"
-                  >
-                    <XCircle size={18} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="skills-grid">
-              {profile.skills.map((skill, index) => (
-                <div className="skill-tag" key={skill}>
-                  <span className="skill-name">{skill}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+
+        {isEditingSkills ? (
+          <div className="skills-edit-grid">
+            {editProfile.skills.map((skill, idx) => (
+              <div className="skill-edit-item" key={idx}>
+                <input
+                  className="skill-edit-input"
+                  value={skill}
+                  onChange={e => handleSkillChange(idx, e.target.value)}
+                  placeholder="Enter skill..."
+                />
+                <button 
+                  className="remove-skill-btn" 
+                  onClick={() => handleRemoveSkill(idx)}
+                  title="Remove Skill"
+                >
+                  <XCircle size={18} />
+                </button>
+              </div>
+            ))}
+            <button onClick={handleAddSkill} className="add-skill-btn">+ Add</button>
+          </div>
+        ) : (
+          <div className="skills-grid">
+            {profile.skills.map((skill, index) => (
+              <div className="skill-tag" key={index}>
+                <span className="skill-name">{skill}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
     </div>
   );
 };

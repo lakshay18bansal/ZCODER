@@ -1,20 +1,21 @@
 /* Profile Container */
 .profile-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  max-width: 100%;
+  width: 100%;
+  padding: 24px clamp(16px, 5vw, 40px);
   background: #0a0e1a;
   min-height: 100vh;
   color: #ffffff;
 }
+
 
 /* Hero Section */
 .profile-hero {
   position: relative;
   background: linear-gradient(135deg, #1a1f36 0%, #0f1419 50%, #1a1f36 100%);
   border-radius: 24px;
-  padding: 60px 40px;
-  margin-bottom: 40px;
+  padding: 40px 24px;
+  margin-bottom: 32px;
   overflow: hidden;
   border: 1px solid rgba(56, 178, 172, 0.2);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -585,4 +586,112 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(56, 178, 172, 0.4);
   background: linear-gradient(135deg, #4299e1, #38b2ac);
+}
+
+/* Section header */
+.profile-section {
+  margin: 1rem auto;
+  padding: 1rem 1.5rem;
+  background-color: #1e293b;
+  border-radius: 1rem;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  color: #fff;
+}
+
+/* Title & header */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Skills display */
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background-color: #334155;
+  padding: 0.4rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #f1f5f9;
+}
+
+/* Skills edit view */
+.skills-edit-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skill-edit-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.skill-edit-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #475569;
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+.skill-edit-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+/* Buttons */
+.edit-skill-btn,
+.save-skill-btn,
+.cancel-skill-btn,
+.add-skill-btn {
+  background-color: #0ea5e9;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-skill-btn:hover,
+.save-skill-btn:hover,
+.cancel-skill-btn:hover,
+.add-skill-btn:hover {
+  background-color: #0284c7;
+}
+
+.skill-btns {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.remove-skill-btn {
+  background: none;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.remove-skill-btn:hover {
+  color: #ef4444;
 }

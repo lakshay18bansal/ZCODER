@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
+import axios from 'axios';
+axios.defaults.baseURL = 'https://zcoder-backend-b6ii.onrender.com';
+console.log("Base URL set to:", axios.defaults.baseURL);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
