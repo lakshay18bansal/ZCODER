@@ -11,10 +11,12 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: '*', // for dev, allows all origins
+  origin: 'https://zcoder-nine.vercel.app', // Vercel frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
+app.options('*', cors()); // <-- handles preflight OPTIONS
+
 
 app.use(express.json());
 app.use((req, res, next) => {
