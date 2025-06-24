@@ -3,6 +3,7 @@ import { Code } from 'lucide-react';
 import './dashboard.css';
 import { fetchQuestions } from '../../utils/questions';
 
+console.log("📍 Dashboard component mounted!");
 
 const Dashboard = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
