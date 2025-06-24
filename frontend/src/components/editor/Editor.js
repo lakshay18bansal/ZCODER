@@ -4,7 +4,6 @@ import { Play, Download, Copy, Sun, Moon, Code2, XCircle, User, LogOut } from 'l
 import './Editor.css';
 import axios from "axios";
 import { CheckCircle } from "react-feather";
-import SplitPane from 'react-split-pane';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 
