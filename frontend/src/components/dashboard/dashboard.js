@@ -77,8 +77,9 @@ const Dashboard = () => {
 
 
   const allTags = Array.from(
-    new Set(questions.flatMap(q => q.tags.concat(q.difficulty ? [q.difficulty] : [])))
-  );
+  new Set(questions.flatMap(q => (q.tags || []).concat(q.difficulty ? [q.difficulty] : [])))
+);
+
 
   const filteredQuestions = questions.filter(q =>
     (!filterTag || q.tags.includes(filterTag) || q.difficulty === filterTag) &&
@@ -87,7 +88,7 @@ const Dashboard = () => {
 
   const QuestionCard = ({ question }) => (
     <div
-      className={`problem-card ${selectedQuestion?.id === question.id ? 'border-teal-400' : ''}`}
+      className={`problem-card ${selectedQuestion?._id === question._id ? 'border-teal-400' : ''}`}
       onClick={() => setSelectedQuestion(question)}
     >
       <div className="problem-card-header">
@@ -161,7 +162,9 @@ const Dashboard = () => {
             </select>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {filteredQuestions.map(q => (<QuestionCard key={q.id} question={q} />))}
+            {filteredQuestions.map(q => (
+              q && q._id ? <QuestionCard key={q._id} question={q} /> : null
+            ))}
             {filteredQuestions.length === 0 && <div style={{ color: '#b2f5ea', textAlign: 'center', marginTop: 24 }}>No questions found.</div>}
           </div>
         </div>
