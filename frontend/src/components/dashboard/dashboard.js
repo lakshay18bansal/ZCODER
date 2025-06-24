@@ -29,6 +29,7 @@ const Dashboard = () => {
   return res.json();
 };
   useEffect(() => {
+    console.log("🧪 Dashboard useEffect running...");
   const uid = localStorage.getItem('userId');
   if (!uid) return;
 
@@ -50,7 +51,7 @@ const Dashboard = () => {
 
   fetchAllData();
 
-  console.log("🧪 Calling fetchQuestions()");
+  console.log("📞 About to call fetchQuestions()");
   fetchQuestions().then(data => {
   console.log("🚀 Received questions in Dashboard:", data);
   setQuestions(data);
