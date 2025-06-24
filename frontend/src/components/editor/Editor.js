@@ -128,7 +128,10 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
 };
     const handleSubmit = async () => {
   console.log("🔥 Submit button clicked");
-
+  if(!userId){
+    alert("❗Please login to submit.");
+    return;
+  }
   if (!selectedQuestion) {
     alert("❗Please select a question before submitting.");
     return;
