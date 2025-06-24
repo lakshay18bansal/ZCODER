@@ -33,24 +33,29 @@ const Dashboard = () => {
 
   const fetchAllData = async () => {
     try {
+      console.log("🧪 Starting fetchAllData()");
       const metrics = await fetchDashboardMetrics(uid);
       console.log("✅ Metrics received:", metrics);
       setSolvedCount(metrics.solved);
       setSubmissionCount(metrics.submissions);
 
-      // ✅ accurate bookmarks (from /api/bookmarks)
       const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
       const data = await res.json();
-      setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id))); // use _id for Mongo refs
+      setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
     } catch (err) {
       console.error("❌ Error fetching dashboard data:", err);
     }
   };
 
   fetchAllData();
-    console.log("🧪 Calling fetchQuestions() from Dashboard...");
-  fetchQuestions().then(setQuestions);
+
+  console.log("🧪 Calling fetchQuestions()");
+  fetchQuestions().then(qs => {
+    console.log("📥 Questions fetched in Dashboard:", qs);
+    setQuestions(qs);
+  });
 }, []);
+
 
 
 
