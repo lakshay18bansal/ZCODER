@@ -50,10 +50,10 @@ const Dashboard = () => {
   fetchAllData();
 
   console.log("🧪 Calling fetchQuestions()");
-  fetchQuestions().then(qs => {
-    console.log("📥 Questions fetched in Dashboard:", qs);
-    setQuestions(qs);
-  });
+  fetchQuestions().then(data => {
+  console.log("🚀 Received questions in Dashboard:", data);
+  setQuestions(data);
+});
 }, []);
 
 
