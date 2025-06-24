@@ -11,7 +11,7 @@ import BlogPost from './components/blog/BlogPost';
 import BlogForm from './components/blog/BlogForm';
 import './App.css';
 
-
+console.log("🔥 App is loaded and JS is active");
 function App() {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
