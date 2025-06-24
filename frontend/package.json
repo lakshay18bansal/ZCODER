@@ -2,7 +2,7 @@
   "name": "zcoder-frontend",
   "version": "0.1.0",
   "private": true,
-  "https://zcoder-frontend-bkfn.onrender.com",
+  "homepage": "https://zcoder-frontend-bkfn.onrender.com",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
