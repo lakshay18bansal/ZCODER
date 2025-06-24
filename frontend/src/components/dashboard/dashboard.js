@@ -31,12 +31,16 @@ const Dashboard = () => {
   useEffect(() => {
     console.log("🧪 Dashboard useEffect running...");
   const uid = localStorage.getItem('userId');
-  if (!uid) return;
+console.log("🪪 userId in localStorage:", uid);
+
+// temp for debugging — proceed even if uid missing
+const useDummyUid = 'debugUser';
+
 
   const fetchAllData = async () => {
     try {
       console.log("🧪 Starting fetchAllData()");
-      const metrics = await fetchDashboardMetrics(uid);
+      const metrics = await fetchDashboardMetrics(useDummyUid);
       console.log("✅ Metrics received:", metrics);
       setSolvedCount(metrics.solved);
       setSubmissionCount(metrics.submissions);
