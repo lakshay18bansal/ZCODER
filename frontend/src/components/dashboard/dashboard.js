@@ -48,6 +48,7 @@ const Dashboard = () => {
   };
 
   fetchAllData();
+    console.log("🧪 Calling fetchQuestions() from Dashboard...");
   fetchQuestions().then(setQuestions);
 }, []);
 
