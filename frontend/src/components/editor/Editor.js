@@ -37,6 +37,7 @@ const Editor = () => {
   const [verdictResults, setVerdictResults] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 const [submitVerdicts, setSubmitVerdicts] = useState([]);  
+  const [isRunning, setIsRunning] = useState(false);
   const codeRef = useRef(null);
   const lineRef = useRef(null);
   const navigate = useNavigate();
@@ -100,9 +101,11 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
 
   // run code
   const onRunCode = async () => {
+  setIsRunning(true); // start spinner
+  setOutput('');
   try {
     const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId'); // get stored userId
+    const userId = localStorage.getItem('userId');
     const response = await fetch('https://zcoder-backend-b6ii.onrender.com/api/code/execute', {
       method: 'POST',
       headers: {
@@ -123,8 +126,11 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
   } catch (error) {
     setOutput('Error connecting to server');
     console.error(error);
+  } finally {
+    setIsRunning(false); // stop spinner
   }
 };
+
     const handleSubmit = async () => {
   console.log("🔥 Submit button clicked");
 
@@ -320,7 +326,11 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
           </div>
 
           <div className="output-content">
-            {output ? (
+            {isRunning ? (
+              <div className="spinner-in-output" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                <div className="loader" />
+              </div>
+            ) : output ? (
               <pre className="output-bubble">{output}</pre>
             ) : (
               <div className="output-placeholder">
