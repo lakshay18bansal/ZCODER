@@ -31,25 +31,22 @@ const Dashboard = () => {
   useEffect(() => {
     console.log("🧪 Dashboard useEffect running...");
   const uid = localStorage.getItem('userId');
-console.log("🪪 userId in localStorage:", uid);
-
-// temp for debugging — proceed even if uid missing
-const useDummyUid = 'debugUser';
-
+  console.log("🪪 userId in localStorage:", uid);
 
   const fetchAllData = async () => {
-    try {
-      console.log("🧪 Starting fetchAllData()");
-      const metrics = await fetchDashboardMetrics(useDummyUid);
-      console.log("✅ Metrics received:", metrics);
-      setSolvedCount(metrics.solved);
-      setSubmissionCount(metrics.submissions);
+    if (uid) {
+      try {
+        const metrics = await fetchDashboardMetrics(uid);
+        console.log("✅ Metrics received:", metrics);
+        setSolvedCount(metrics.solved);
+        setSubmissionCount(metrics.submissions);
 
-      const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
-      const data = await res.json();
-      setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
-    } catch (err) {
-      console.error("❌ Error fetching dashboard data:", err);
+        const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
+        const data = await res.json();
+        setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
+      } catch (err) {
+        console.error("Please Login to view stats", err);
+      }
     }
   };
 
@@ -57,11 +54,10 @@ const useDummyUid = 'debugUser';
 
   console.log("📞 About to call fetchQuestions()");
   fetchQuestions().then(data => {
-  console.log("🚀 Received questions in Dashboard:", data);
-  setQuestions(data);
-});
+    console.log("🚀 Received questions in Dashboard:", data);
+    setQuestions(data);
+  });
 }, []);
-
 
 
 
