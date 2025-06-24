@@ -10,10 +10,22 @@ const blogRoutes = require('./routes/blogs');
 dotenv.config();
 
 const app = express();
+const cors = require('cors');
+
+const allowedOrigins = [
+  'https://zcoder-frontend-bkfn.onrender.com/dashboard',
+  'http://localhost:3000'  
+];
+
 app.use(cors({
-  origin: '*', // for dev, allows all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
 
 
