@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
-  'https://zcoder-frontend-bkfn.onrender.com/dashboard',
+  'https://zcoder-frontend-bkfn.onrender.com',
   'http://localhost:3000'  
 ];
 
