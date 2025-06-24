@@ -228,7 +228,12 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
           <select
             className="editor-select"
             value={selectedQid}
-            onChange={e => setSelectedQid(e.target.value)}
+            onChange={e => {
+              const selectedId = e.target.value;
+              setSelectedQid(selectedId);
+              const foundQ = questions.find(q => q._id === selectedId);
+              setSelectedQuestion(foundQ || null);
+            }}
             style={{ minWidth: 120 }}
           >
             <option value="">Choose Question</option>
