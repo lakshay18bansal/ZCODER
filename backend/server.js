@@ -10,7 +10,6 @@ const blogRoutes = require('./routes/blogs');
 dotenv.config();
 
 const app = express();
-const cors = require('cors');
 
 const allowedOrigins = [
   'https://zcoder-frontend-bkfn.onrender.com/dashboard',
