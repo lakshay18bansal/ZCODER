@@ -103,7 +103,6 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
   try {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId'); // get stored userId
-
     const response = await fetch('https://zcoder-backend-b6ii.onrender.com/api/code/execute', {
       method: 'POST',
       headers: {
@@ -128,12 +127,14 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
 };
     const handleSubmit = async () => {
   console.log("🔥 Submit button clicked");
-  if(!userId){
-    alert("❗Please login to submit.");
+
+  if (!isLoggedIn) {
+    alert("ZCODER says:\n\nPlease login to submit solutions.");
     return;
   }
+
   if (!selectedQuestion) {
-    alert("❗Please select a question before submitting.");
+    alert("ZCODER says:\n\nPlease select a question before submitting.");
     return;
   }
 
@@ -150,13 +151,24 @@ const [submitVerdicts, setSubmitVerdicts] = useState([]);
 
     setSubmitVerdicts(res.data.verdicts || []);
     if (!res.data.passed) {
-      setOutput(res.data.verdicts.map(v => `Test Case ${v.testCase}: ${v.passed ? '✅ Passed' : '❌ Failed'}`).join("\n"));
+      setOutput(
+        res.data.verdicts
+          .map(v => `Test Case ${v.testCase}: ${v.passed ? '✅ Passed' : '❌ Failed'}`)
+          .join("\n")
+      );
     }
   } catch (err) {
     console.error("❌ Submit error:", err?.response?.data || err.message);
-    setSubmitVerdicts([{ testCase: 0, passed: false, input: '', expected: '', output: 'Submission failed' }]);
+    setSubmitVerdicts([{
+      testCase: 0,
+      passed: false,
+      input: '',
+      expected: '',
+      output: 'Submission failed'
+    }]);
   }
 };
+
 
 
 
