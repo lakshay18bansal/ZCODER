@@ -13,76 +13,75 @@ const Dashboard = () => {
   const [search, setSearch] = useState('');
   const [solvedCount, setSolvedCount] = useState(null);
   const [submissionCount, setSubmissionCount] = useState(null);
-  const fetchBookmarks = async (uid) => {
-  try {
-    const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
-    const data = await res.json();
-    setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
-  } catch (err) {
-    console.error('Failed to fetch bookmarks:', err);
-  }
-};
 
-  const fetchDashboardMetrics = async (userId) => {
-  const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/code/metrics/${userId}`); // Updated to absolute URL for dev
-  if (!res.ok) throw new Error('Failed to fetch dashboard metrics');
-  return res.json();
-};
-  useEffect(() => {
-    console.log("🧪 Dashboard useEffect running...");
   const uid = localStorage.getItem('userId');
-  console.log("🪪 userId in localStorage:", uid);
+  const isLoggedIn = !!uid;
 
-  const fetchAllData = async () => {
-    if (uid) {
-      try {
-        const metrics = await fetchDashboardMetrics(uid);
-        console.log("✅ Metrics received:", metrics);
-        setSolvedCount(metrics.solved);
-        setSubmissionCount(metrics.submissions);
-
-        const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
-        const data = await res.json();
-        setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
-      } catch (err) {
-        console.error("Please Login to view stats", err);
-      }
+  const fetchBookmarks = async (uid) => {
+    try {
+      const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/bookmarks/${uid}`);
+      const data = await res.json();
+      setBookmarkedQuestions(new Set(data.bookmarks.map(q => q._id)));
+    } catch (err) {
+      console.error('Failed to fetch bookmarks:', err);
     }
   };
 
-  fetchAllData();
+  const fetchDashboardMetrics = async (userId) => {
+    const res = await fetch(`https://zcoder-backend-b6ii.onrender.com/api/code/metrics/${userId}`);
+    if (!res.ok) throw new Error('Failed to fetch dashboard metrics');
+    return res.json();
+  };
 
-  console.log("📞 About to call fetchQuestions()");
-  fetchQuestions().then(data => {
-    console.log("🚀 Received questions in Dashboard:", data);
-    setQuestions(data);
-  });
-}, []);
+  useEffect(() => {
+    console.log("🧪 Dashboard useEffect running...");
+    console.log("🪪 userId in localStorage:", uid);
 
+    const fetchAllData = async () => {
+      if (uid) {
+        try {
+          const metrics = await fetchDashboardMetrics(uid);
+          console.log("✅ Metrics received:", metrics);
+          setSolvedCount(metrics.solved);
+          setSubmissionCount(metrics.submissions);
 
+          await fetchBookmarks(uid);
+        } catch (err) {
+          console.error("Please Login to view stats", err);
+        }
+      }
+    };
+
+    fetchAllData();
+
+    console.log("📞 About to call fetchQuestions()");
+    fetchQuestions().then(data => {
+      console.log("🚀 Received questions in Dashboard:", data);
+      setQuestions(data);
+    });
+  }, []);
 
   const toggleBookmark = async (qid) => {
-  const uid = localStorage.getItem('userId');
-  if (!uid) return;
-
-  try {
-    const res = await fetch('https://zcoder-backend-b6ii.onrender.com/api/bookmarks/toggle', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: uid, questionId: qid }),
-    });
-
-    const data = await res.json();
-    if (data.success) {
-      // fetchBookmarks again to sync state from DB
-      await fetchBookmarks(uid);
+    if (!isLoggedIn) {
+      alert("Please login to bookmark questions.");
+      return;
     }
-  } catch (err) {
-    console.error('Bookmark toggle failed:', err);
-  }
-};
 
+    try {
+      const res = await fetch('https://zcoder-backend-b6ii.onrender.com/api/bookmarks/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: uid, questionId: qid }),
+      });
 
+      const data = await res.json();
+      if (data.success) {
+        await fetchBookmarks(uid);
+      }
+    } catch (err) {
+      console.error('Bookmark toggle failed:', err);
+    }
+  };
 
   const allTags = Array.from(
     new Set(questions.flatMap(q => q.tags.concat(q.difficulty ? [q.difficulty] : [])))
@@ -101,8 +100,19 @@ const Dashboard = () => {
       <div className="problem-card-header">
         <h3>Q: {question.id}</h3>
         <span
-          onClick={e => { e.stopPropagation(); toggleBookmark(question._id); }}
-          style={{ cursor: 'pointer', fontSize: 22, color: bookmarkedQuestions.has(question._id) ? '#ecc94b' : '#b2f5ea' }}
+          onClick={e => {
+            e.stopPropagation();
+            if (!isLoggedIn) {
+              alert("Please login to bookmark questions.");
+              return;
+            }
+            toggleBookmark(question._id);
+          }}
+          style={{
+            cursor: 'pointer',
+            fontSize: 22,
+            color: bookmarkedQuestions.has(question._id) ? '#ecc94b' : '#b2f5ea'
+          }}
         >
           {bookmarkedQuestions.has(question._id) ? '★' : '☆'}
         </span>
@@ -123,12 +133,23 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <div style={{ padding: '0px 20px 32px', background: '#1f2937', borderRadius: '12px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginTop: '32px' }}>
-          <h1 style={{ fontSize: '2.8rem', fontWeight: '800', color: '#38b2ac', margin: 0 }}>Dashboard · ZCODER</h1>
+          <div>
+            <h1 style={{ fontSize: '2.8rem', fontWeight: '800', color: '#38b2ac', margin: 0 }}>Dashboard · ZCODER</h1>
+            {isLoggedIn && (
+              <p style={{ fontSize: '1rem', color: '#c6f6d5' }}>
+                Logged in as: <strong>{localStorage.getItem('displayName') || 'User'}</strong>
+              </p>
+            )}
+          </div>
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
             <div className="stat-card"><h4>Total Questions</h4><p>{questions.length}</p></div>
-            <div className="stat-card"><h4>Solved</h4><p>{solvedCount > 0 ? solvedCount : '--'}</p></div>
-            <div className="stat-card"><h4>Submissions</h4><p>{submissionCount > 0 ? submissionCount : '--'}</p></div>
-            <div className="stat-card"><h4>Bookmarked</h4><p>{bookmarkedQuestions.size > 0 ? bookmarkedQuestions.size : '--'}</p></div>
+            {isLoggedIn && (
+              <>
+                <div className="stat-card"><h4>Solved</h4><p>{solvedCount > 0 ? solvedCount : '--'}</p></div>
+                <div className="stat-card"><h4>Submissions</h4><p>{submissionCount > 0 ? submissionCount : '--'}</p></div>
+                <div className="stat-card"><h4>Bookmarked</h4><p>{bookmarkedQuestions.size > 0 ? bookmarkedQuestions.size : '--'}</p></div>
+              </>
+            )}
           </div>
         </div>
         <p style={{ fontStyle: 'italic', fontSize: '1.3rem', color: '#b2f5ea', marginTop: '12px', marginBottom: '12px' }}>
@@ -138,6 +159,7 @@ const Dashboard = () => {
           Your journey to becoming a code ninja starts here. Dive into handpicked problems, flex your brain, and build that muscle memory for patterns. This isn’t just another platform—it’s your personal battleground of bugs and brilliance.
         </p>
       </div>
+
       <div style={{ background: '#1e2a36', borderRadius: '12px', padding: '24px', marginTop: '2px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
         <h3 style={{ color: '#38b2ac', fontSize: '20px', marginBottom: '12px', marginTop: '24px' }}>Pro Tips 🧠</h3>
         <ul style={{ color: '#e6fffa', fontSize: '16px', lineHeight: 1.8, paddingLeft: '20px', marginBottom: '24px' }}>
@@ -148,6 +170,7 @@ const Dashboard = () => {
           <li><strong>⚡ Speed comes later:</strong> First get it right. Then get it fast.</li>
         </ul>
       </div>
+
       <div className="dashboard-section" style={{ display: 'flex', gap: 32, flexWrap: 'wrap', marginTop: 24 }}>
         <div style={{ flex: 1, minWidth: 320, maxHeight: 600, overflowY: 'auto', borderRight: '1px solid #23272f', paddingRight: 16 }}>
           <h3 style={{ color: '#38b2ac', marginBottom: 12 }}>Questions</h3>
@@ -191,7 +214,18 @@ const Dashboard = () => {
               <div style={{ marginBottom: 10 }}><strong style={{ color: '#38b2ac' }}>Output Format:</strong> <span style={{ color: '#b2f5ea' }}>{selectedQuestion.output_format}</span></div>
               <div style={{ marginBottom: 10 }}><strong style={{ color: '#38b2ac' }}>Sample Input:</strong><pre style={{ background: '#23272f', color: '#b2f5ea', borderRadius: 6, padding: 8, margin: 0 }}>{selectedQuestion.demo_input}</pre></div>
               <div style={{ marginBottom: 18 }}><strong style={{ color: '#38b2ac' }}>Sample Output:</strong><pre style={{ background: '#23272f', color: '#b2f5ea', borderRadius: 6, padding: 8, margin: 0 }}>{selectedQuestion.demo_output}</pre></div>
-              <button className="action-button primary-button" style={{ marginTop: 16 }} onClick={() => window.location.href = `/editor?qid=${selectedQuestion.id}`}>
+              <button
+                className="action-button primary-button"
+                style={{ marginTop: 16 }}
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    alert("Please login to solve questions.");
+                    window.location.href = '/login';
+                  } else {
+                    window.location.href = `/editor?qid=${selectedQuestion.id}`;
+                  }
+                }}
+              >
                 Go to Editor & Solve
               </button>
             </div>
