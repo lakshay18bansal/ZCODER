@@ -1,75 +1,108 @@
-TO GET THE code editor working use:
---> cp .env.example .env
-and then login to: https://www.jdoodle.com/compiler-api and get your JDOODLE_CLIENT_ID and JDOODLE_CLIENT_SECRET
---> copy them to required fields in .env file and you can run it successfully!
+# Image-Segmentation
+Road scene segmentation with DeepLabV3+ for self-driving cars. Includes TensorFlow model and visualization tools.
 
-# Getting Started with Create React App
+**Live Demo:** https://image-segmentation-w3rdpbpx5clruaj9tamshp.streamlit.app/
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
+This project focuses on road scene segmentation using the DeepLabV3+ model, a state-of-the-art architecture for semantic image segmentation. The goal is to enable accurate segmentation of road scenes, which is crucial for applications like self-driving cars.
 
-## Available Scripts
+## Features
+- **DeepLabV3+ Model**: Utilizes TensorFlow for training and inference.
+- **Label Definitions**: Includes detailed label definitions for various road scene elements such as roads, vehicles, and barriers.
+- **Optimized Segmentation**: Implements efficient segmentation map conversion and data handling.
+- **Visualization Tools**: Provides tools to visualize segmentation results.
+- **Streamlit App**: Interactive web application for testing and visualizing segmentation results.
 
-In the project directory, you can run:
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/image-segmentation.git
+   ```
+2. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### `npm start`
+## Usage
+- **Training**: Use the Jupyter Notebook `Image Segmentation DeepLabV3+ training.ipynb` to train the model.
+  - Includes setup for label definitions and optimized data collection.
+  - Provides helper functions for segmentation map conversion and image identifier extraction.
+- **Visualization**: Run the Streamlit app using:
+   ```bash
+   streamlit run streamlit_app.py
+   ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Data Preprocessing
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Listing All Unique Labels
+The dataset contains various labels representing different elements in road scenes. The preprocessing step involves listing all unique labels present in the dataset.
 
-### `npm test`
+### Creating Hugging Face Datasets
+The dataset is converted into Hugging Face `Dataset` format for efficient handling and split into training, validation, and test sets.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Mapping IDs to Labels
+A mapping is created to hash IDs to their corresponding labels.
 
-### `npm run build`
+### Visualizing Sample Images and Segmentation Maps
+Sample images and their segmentation maps are visualized without overlaying.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Optimized Data Collection
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The data collection process involves gathering raw images and their corresponding labels from specified directories. The images are resized to a consistent target size of `(256, 256)` for uniformity. Labels are converted into NumPy arrays using an optimized function for efficient handling.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Process
+- **Directories**: Data is collected from subdirectories containing training images and label images.
+- **Matching**: Each label image is matched with its corresponding training image using a unique identifier.
+- **Conversion**: Images are resized and converted to NumPy arrays for further processing.
+- **Error Handling**: Any mismatched or problematic files are skipped to ensure smooth data collection.
 
-### `npm run eject`
+#### Summary
+- **Target Image Size**: `(256, 256)`
+- **Total Samples Collected**: The number of samples collected is displayed after the process completes.
+- **Memory Cleanup**: Garbage collection is performed to free up memory after data collection.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## DeepLabV3+ Model
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+DeepLabV3+ is an advanced semantic segmentation model designed to accurately classify pixels in images. It leverages Atrous Spatial Pyramid Pooling (ASPP) for multi-scale feature extraction and a decoder module for refining segmentation results. The model uses ResNet101 as its backbone and is ideal for applications like road scene segmentation in self-driving cars.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- ![DeepLabV3+ Architecture](assets/image.png)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Overview
+The DeepLabV3+ model is a state-of-the-art architecture for semantic image segmentation. It combines Atrous Spatial Pyramid Pooling (ASPP) and a decoder module to achieve high-resolution segmentation results. This implementation uses TensorFlow and ResNet101 as the backbone.
 
-## Learn More
+### Features
+- **Backbone**: ResNet101 pre-trained on ImageNet.
+- **ASPP Module**: Extracts multi-scale features using atrous convolutions with different dilation rates.
+- **Decoder Module**: Refines high-resolution features for accurate segmentation.
+- **Global Average Pooling**: Captures global context information.
+- **Dropout**: Regularization to prevent overfitting.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Model Definition
+The model is defined with the following components:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### ASPP (Atrous Spatial Pyramid Pooling)
+- Parallel atrous convolutions with dilation rates `[6, 12, 18, 24]`.
+- Global average pooling branch for capturing global context.
+- Concatenation of all ASPP outputs followed by 1x1 convolution and dropout.
 
-### Code Splitting
+#### Decoder Module
+- Upsamples ASPP output to match high-resolution features.
+- Refines high-resolution features using 1x1 convolution.
+- Combines upsampled ASPP output with refined high-resolution features.
+- Final convolutions for segmentation and upsampling to input image resolution.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Checkpoint Handling
+The model checks for existing checkpoints and loads them if available. Otherwise, it creates a new model instance.
 
-### Analyzing the Bundle Size
+## Training Results
+After 30 epochs:
+- Train Loss: 0.2826, Train Accuracy: 0.9314
+- Validation Loss: 0.2825, Validation Accuracy: 0.9314
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- ![Training Results](assets/output.png)
 
-### Making a Progressive Web App
+## Requirements
+See `requirements.txt` for a list of dependencies.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## License
+This project is licensed under the MIT License.
