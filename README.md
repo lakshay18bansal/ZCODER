@@ -22,23 +22,23 @@ ZCODER is a full-stack web application for collaborative coding and project shar
 
 ```
 ├── backend
-        ├── middleware
-        ├── models
-        ├── node_modules
-        ├── package-lock.json
-        ├── package.json
-        ├── render.yaml
-        ├── routes
-        └── server.js
+│   ├── middleware
+│   ├── models
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── render.yaml
+│   ├── routes
+│   └── server.js
 ├── frontend
-        ├── node_modules
-        ├── package-lock.json
-        ├── package.json
-        ├── public
-        ├── scripts
-        ├── src
-        └── temp_login.css
-├── gitignore
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   ├── scripts
+│   ├── src
+│   └── temp_login.css
+├── .gitignore
 ├── questions.json
 └── README.md
 ```
@@ -65,14 +65,8 @@ npm run dev
 
 ## Website Link
 
-
-```
-[ZCODER](https://zcoder-frontend-bkfn.onrender.com/)
-
-```
+[ZCODER Live](https://zcoder-frontend-bkfn.onrender.com/)
 
 ## License
 
 This project is open-source and available under the MIT License.
-
-
