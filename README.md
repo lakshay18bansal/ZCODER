@@ -20,6 +20,7 @@ ZCODER is a full-stack web application for collaborative coding and project shar
 
 ## Getting Started
 
+```
 ├── backend
         ├── middleware
         ├── models
@@ -40,6 +41,7 @@ ZCODER is a full-stack web application for collaborative coding and project shar
 ├── gitignore
 ├── questions.json
 └── README.md
+```
 
 ### Clone the repository
 ```bash
@@ -61,10 +63,11 @@ npm install
 npm run dev
 ```
 
-## Website Link 
+## Website Link
 
+
+```
 https://zcoder-frontend-bkfn.onrender.com/
-
 
 ```
 
